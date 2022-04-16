@@ -30,7 +30,7 @@ jobs:
           NAME=$(cargo metadata -q --no-deps | jq -r '.packages[0].name')
           VERSION=$(cargo metadata -q --no-deps | jq -r '.packages[0].version')
           echo "::set-output name=name::$NAME"
-          echo "::set-output name=version::$VERSION"
+          echo "::set-output name=version::v$VERSION"
           echo "Found $NAME-$VERSION"
 
       - name: Lookup ${{ steps.vars.outputs.version }} tag

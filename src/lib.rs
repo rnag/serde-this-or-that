@@ -19,29 +19,34 @@
 //! ```rust
 //! use serde_json::from_str;
 //!
-//! use serde_this_or_that::{as_bool, as_u64, Deserialize};
+//! use serde_this_or_that::{as_bool, as_f64, as_u64, Deserialize};
 //!
-//! #[derive(Deserialize)]
+//! #[derive(Deserialize, Debug)]
 //! #[serde(rename_all = "camelCase")]
 //! struct MyStruct {
 //!     #[serde(deserialize_with = "as_bool")]
 //!     is_active: bool,
 //!     #[serde(deserialize_with = "as_u64")]
 //!     num_attempts: u64,
+//!     #[serde(deserialize_with = "as_f64")]
+//!     grade: f64,
 //! }
 //!
 //! fn main() -> Result<(), Box<dyn std::error::Error>> {
 //!     let string = r#"
 //!     {
 //!         "isActive": "True",
-//!         "numAttempts": ""
+//!         "numAttempts": "",
+//!         "grade": "81"
 //!     }
 //!     "#;
 //!
 //!     let s: MyStruct = from_str(string)?;
+//!     println!("{s:#?}");
 //!
 //!     assert!(s.is_active);
 //!     assert_eq!(s.num_attempts, 0);
+//!     assert_eq!(s.grade, 81.0);
 //!
 //!     Ok(())
 //! }
@@ -56,7 +61,7 @@
 //!
 //! The benchmarks suggest that implementing a custom
 //! `Visitor` as `serde-this-or-that` does, performs
-//! on average **about 10x** better than an approach with an [untagged enum].
+//! on average **about 10x better** than an approach with an [untagged enum].
 //!
 //! The benchmarks live in the [benches/](https://github.com/rnag/serde-this-or-that/tree/main/benches)
 //! folder, and can be run with `cargo bench`.

@@ -3,7 +3,7 @@ use std::{f64, fmt};
 use crate::de;
 use crate::de::{Deserializer, Unexpected};
 
-/// De-serialize either a `str`, `i64`, `f64`, or `u64`
+/// De-serialize either a `null`, `str`, `i64`, `f64`, or `u64`
 /// as a *signed* value.
 ///
 /// # Errors
@@ -21,7 +21,7 @@ where
     deserializer.deserialize_any(DeserializeI64WithVisitor)
 }
 
-/// De-serialize either a `str`, `u64`, `f64`, or `i64`
+/// De-serialize either a `null`, `str`, `u64`, `f64`, or `i64`
 /// as an *unsigned* value.
 ///
 /// # Errors
@@ -38,7 +38,8 @@ where
     deserializer.deserialize_any(DeserializeU64WithVisitor)
 }
 
-/// De-serialize either a `str`, `f64`, `u64`, or `i64` as a float value.
+/// De-serialize either a `null`, `str`, `f64`, `u64`, or `i64`
+/// as a *float* value.
 ///
 /// # Errors
 /// Returns an error if a string is non-empty and not a valid numeric value.
@@ -53,7 +54,8 @@ where
     deserializer.deserialize_any(DeserializeF64WithVisitor)
 }
 
-/// De-serialize either a `bool`, `str`, `u64`, or `f64` as a boolean value.
+/// De-serialize either a `null`, `bool`, `str`, `u64`, or `f64`
+/// as a *boolean* value.
 ///
 /// # Truthy String Values
 /// > Note: the pattern matching is *case insensitive*, so `YES` or `yes`

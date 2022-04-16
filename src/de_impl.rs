@@ -85,6 +85,19 @@ where
     deserializer.deserialize_any(DeserializeBoolWithVisitor)
 }
 
+/// De-serialize either a `null`, `str`, `bool`, `i64`, `f64`, or `u64`
+/// as an (owned) *string* value.
+///
+/// # Returns
+/// The owned `String` value of a string, boolean, or number.
+///
+pub fn as_string<'de, D>(deserializer: D) -> Result<String, D::Error>
+where
+    D: Deserializer<'de>,
+{
+    deserializer.deserialize_any(DeserializeStringWithVisitor)
+}
+
 /// TODO maybe update these definitions into a macro ..?
 
 struct DeserializeU64WithVisitor;
@@ -336,5 +349,59 @@ impl<'de> de::Visitor<'de> for DeserializeBoolWithVisitor {
         E: de::Error,
     {
         Ok(false)
+    }
+}
+
+struct DeserializeStringWithVisitor;
+
+impl<'de> de::Visitor<'de> for DeserializeStringWithVisitor {
+    type Value = String;
+
+    fn expecting(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str("a string, bool, or a number")
+    }
+
+    fn visit_bool<E>(self, v: bool) -> Result<Self::Value, E>
+    where
+        E: de::Error,
+    {
+        Ok(v.to_string())
+    }
+
+    fn visit_i64<E>(self, v: i64) -> Result<Self::Value, E>
+    where
+        E: de::Error,
+    {
+        Ok(v.to_string())
+    }
+
+    fn visit_u64<E>(self, v: u64) -> Result<Self::Value, E>
+    where
+        E: de::Error,
+    {
+        Ok(v.to_string())
+    }
+
+    fn visit_f64<E>(self, v: f64) -> Result<Self::Value, E>
+    where
+        E: de::Error,
+    {
+        Ok(v.to_string())
+    }
+
+    fn visit_str<E>(self, v: &str) -> Result<Self::Value, E>
+    where
+        E: de::Error,
+    {
+        Ok(v.to_owned())
+    }
+
+    /// We encounter a `null` value; this default implementation returns an
+    /// "empty" string.
+    fn visit_unit<E>(self) -> Result<Self::Value, E>
+    where
+        E: de::Error,
+    {
+        Ok(String::new())
     }
 }

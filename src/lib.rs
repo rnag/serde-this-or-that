@@ -74,7 +74,7 @@
 
 mod de_impl;
 
-pub use de_impl::{as_bool, as_f64, as_i64, as_u64};
+pub use de_impl::{as_bool, as_f64, as_i64, as_string, as_u64};
 pub use serde;
 pub use serde::*;
 

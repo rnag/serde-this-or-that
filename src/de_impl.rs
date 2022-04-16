@@ -1,14 +1,15 @@
 use std::{f64, fmt};
 
-use serde::de::Unexpected;
-use serde::{de, Deserializer};
+use crate::de;
+use crate::de::{Deserializer, Unexpected};
 
 /// De-serialize either a `str`, `i64`, `f64`, or `u64`
 /// as a *signed* value.
 ///
 /// # Errors
-/// Returns an error if a string is not a valid numeric value, or if
-/// the unsigned value `u64` *overflows* when converted to `i64`.
+/// Returns an error if a string is non-empty and not a valid numeric
+/// value, or if the unsigned value `u64` *overflows* when converted
+/// to `i64`.
 ///
 /// # Returns
 /// The signed (`i64`) value of a string or number.
@@ -24,8 +25,8 @@ where
 /// as an *unsigned* value.
 ///
 /// # Errors
-/// Returns an error if a string is not a valid numeric value, or if
-/// the signed value `i64` represents a *negative* number.
+/// Returns an error if a string is non-empty and not a valid numeric
+/// value, or if the signed value `i64` represents a *negative* number.
 ///
 /// # Returns
 /// The unsigned (`u64`) value of a string or number.
@@ -40,7 +41,7 @@ where
 /// De-serialize either a `str`, `f64`, `u64`, or `i64` as a float value.
 ///
 /// # Errors
-/// Returns an error if a string is not a valid numeric value.
+/// Returns an error if a string is non-empty and not a valid numeric value.
 ///
 /// # Returns
 /// The floating point (`f64`) value of a string or number.
@@ -125,7 +126,13 @@ impl<'de> de::Visitor<'de> for DeserializeU64OrStringVisitor {
     {
         match v.parse::<u64>() {
             Ok(s) => Ok(s),
-            Err(_) => Err(E::invalid_value(Unexpected::Str(v), &self)),
+            Err(_) => {
+                if v.is_empty() {
+                    Ok(0)
+                } else {
+                    Err(E::invalid_value(Unexpected::Str(v), &self))
+                }
+            }
         }
     }
 }
@@ -171,7 +178,13 @@ impl<'de> de::Visitor<'de> for DeserializeI64OrStringVisitor {
     {
         match v.parse::<i64>() {
             Ok(s) => Ok(s),
-            Err(_) => Err(E::invalid_value(Unexpected::Str(v), &self)),
+            Err(_) => {
+                if v.is_empty() {
+                    Ok(0)
+                } else {
+                    Err(E::invalid_value(Unexpected::Str(v), &self))
+                }
+            }
         }
     }
 }
@@ -212,7 +225,13 @@ impl<'de> de::Visitor<'de> for DeserializeF64OrStringVisitor {
     {
         match v.parse::<f64>() {
             Ok(s) => Ok(s),
-            Err(_) => Err(E::invalid_value(Unexpected::Str(v), &self)),
+            Err(_) => {
+                if v.is_empty() {
+                    Ok(0.0)
+                } else {
+                    Err(E::invalid_value(Unexpected::Str(v), &self))
+                }
+            }
         }
     }
 }

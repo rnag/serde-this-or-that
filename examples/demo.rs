@@ -18,7 +18,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let string = r#"
     {
         "isActive": "True",
-        "numAttempts": "3"
+        "numAttempts": ""
     }
     "#;
 
@@ -27,7 +27,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     trace!("{s:?}");
 
     assert!(s.is_active);
-    assert_eq!(s.num_attempts, 3);
+    assert_eq!(s.num_attempts, 0);
 
     Ok(())
 }

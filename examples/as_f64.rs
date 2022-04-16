@@ -20,6 +20,16 @@ fn main() -> Result<()> {
 
     let data = r#"
     {
+        "timestamp": ""
+    }"#;
+
+    let m: Msg = serde_json::from_str(data).unwrap();
+
+    trace!("{m:?}");
+    assert_eq!(m.timestamp, 0.0);
+
+    let data = r#"
+    {
         "timestamp": 123456789076543210
     }"#;
 

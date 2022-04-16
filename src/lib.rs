@@ -72,9 +72,9 @@
 //! [`README.md`]: https://github.com/rnag/serde-this-or-that
 //!
 
-mod de;
+mod de_impl;
 
-pub use de::{as_bool, as_f64, as_i64, as_u64};
+pub use de_impl::{as_bool, as_f64, as_i64, as_u64};
 pub use serde;
 pub use serde::*;
 

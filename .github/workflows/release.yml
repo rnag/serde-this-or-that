@@ -23,7 +23,6 @@ jobs:
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
-$
           prerelease: ${{ contains(github.ref, 'alpha') || contains(github.ref, 'beta') }}
           generate_release_notes: true
           body: ${{ fromJson(steps.vars.outputs.changelog) }}

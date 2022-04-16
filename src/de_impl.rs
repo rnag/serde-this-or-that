@@ -109,7 +109,7 @@ impl<'de> de::Visitor<'de> for DeserializeU64WithVisitor {
         formatter.write_str("an unsigned integer or a string")
     }
 
-    fn visit_i64<E>(self, v: i64) -> Result<u64, E>
+    fn visit_i64<E>(self, v: i64) -> Result<Self::Value, E>
     where
         E: de::Error,
     {
@@ -121,21 +121,21 @@ impl<'de> de::Visitor<'de> for DeserializeU64WithVisitor {
         }
     }
 
-    fn visit_u64<E>(self, v: u64) -> Result<u64, E>
+    fn visit_u64<E>(self, v: u64) -> Result<Self::Value, E>
     where
         E: de::Error,
     {
         Ok(v)
     }
 
-    fn visit_f64<E>(self, v: f64) -> Result<u64, E>
+    fn visit_f64<E>(self, v: f64) -> Result<Self::Value, E>
     where
         E: de::Error,
     {
         Ok(v.round() as u64)
     }
 
-    fn visit_str<E>(self, v: &str) -> Result<u64, E>
+    fn visit_str<E>(self, v: &str) -> Result<Self::Value, E>
     where
         E: de::Error,
     {
@@ -155,7 +155,7 @@ impl<'de> de::Visitor<'de> for DeserializeU64WithVisitor {
 
     /// We encounter a `null` value; this default implementation returns a
     /// "zero" value.
-    fn visit_unit<E>(self) -> Result<u64, E>
+    fn visit_unit<E>(self) -> Result<Self::Value, E>
     where
         E: de::Error,
     {
@@ -172,14 +172,14 @@ impl<'de> de::Visitor<'de> for DeserializeI64WithVisitor {
         formatter.write_str("a signed integer or a string")
     }
 
-    fn visit_i64<E>(self, v: i64) -> Result<i64, E>
+    fn visit_i64<E>(self, v: i64) -> Result<Self::Value, E>
     where
         E: de::Error,
     {
         Ok(v)
     }
 
-    fn visit_u64<E>(self, v: u64) -> Result<i64, E>
+    fn visit_u64<E>(self, v: u64) -> Result<Self::Value, E>
     where
         E: de::Error,
     {
@@ -191,14 +191,14 @@ impl<'de> de::Visitor<'de> for DeserializeI64WithVisitor {
         }
     }
 
-    fn visit_f64<E>(self, v: f64) -> Result<i64, E>
+    fn visit_f64<E>(self, v: f64) -> Result<Self::Value, E>
     where
         E: de::Error,
     {
         Ok(v.round() as i64)
     }
 
-    fn visit_str<E>(self, v: &str) -> Result<i64, E>
+    fn visit_str<E>(self, v: &str) -> Result<Self::Value, E>
     where
         E: de::Error,
     {
@@ -218,7 +218,7 @@ impl<'de> de::Visitor<'de> for DeserializeI64WithVisitor {
 
     /// We encounter a `null` value; this default implementation returns a
     /// "zero" value.
-    fn visit_unit<E>(self) -> Result<i64, E>
+    fn visit_unit<E>(self) -> Result<Self::Value, E>
     where
         E: de::Error,
     {
@@ -235,28 +235,28 @@ impl<'de> de::Visitor<'de> for DeserializeF64WithVisitor {
         formatter.write_str("a float or a string")
     }
 
-    fn visit_i64<E>(self, v: i64) -> Result<f64, E>
+    fn visit_i64<E>(self, v: i64) -> Result<Self::Value, E>
     where
         E: de::Error,
     {
         Ok(v as f64)
     }
 
-    fn visit_u64<E>(self, v: u64) -> Result<f64, E>
+    fn visit_u64<E>(self, v: u64) -> Result<Self::Value, E>
     where
         E: de::Error,
     {
         Ok(v as f64)
     }
 
-    fn visit_f64<E>(self, v: f64) -> Result<f64, E>
+    fn visit_f64<E>(self, v: f64) -> Result<Self::Value, E>
     where
         E: de::Error,
     {
         Ok(v)
     }
 
-    fn visit_str<E>(self, v: &str) -> Result<f64, E>
+    fn visit_str<E>(self, v: &str) -> Result<Self::Value, E>
     where
         E: de::Error,
     {
@@ -274,7 +274,7 @@ impl<'de> de::Visitor<'de> for DeserializeF64WithVisitor {
 
     /// We encounter a `null` value; this default implementation returns a
     /// "zero" value.
-    fn visit_unit<E>(self) -> Result<f64, E>
+    fn visit_unit<E>(self) -> Result<Self::Value, E>
     where
         E: de::Error,
     {
@@ -291,14 +291,14 @@ impl<'de> de::Visitor<'de> for DeserializeBoolWithVisitor {
         formatter.write_str("an integer (0 or 1) or a string")
     }
 
-    fn visit_bool<E>(self, v: bool) -> Result<bool, E>
+    fn visit_bool<E>(self, v: bool) -> Result<Self::Value, E>
     where
         E: de::Error,
     {
         Ok(v)
     }
 
-    fn visit_i64<E>(self, v: i64) -> Result<bool, E>
+    fn visit_i64<E>(self, v: i64) -> Result<Self::Value, E>
     where
         E: de::Error,
     {
@@ -308,7 +308,7 @@ impl<'de> de::Visitor<'de> for DeserializeBoolWithVisitor {
         ))
     }
 
-    fn visit_u64<E>(self, v: u64) -> Result<bool, E>
+    fn visit_u64<E>(self, v: u64) -> Result<Self::Value, E>
     where
         E: de::Error,
     {
@@ -322,7 +322,7 @@ impl<'de> de::Visitor<'de> for DeserializeBoolWithVisitor {
         }
     }
 
-    fn visit_f64<E>(self, v: f64) -> Result<bool, E>
+    fn visit_f64<E>(self, v: f64) -> Result<Self::Value, E>
     where
         E: de::Error,
     {
@@ -336,7 +336,7 @@ impl<'de> de::Visitor<'de> for DeserializeBoolWithVisitor {
         }
     }
 
-    fn visit_str<E>(self, v: &str) -> Result<bool, E>
+    fn visit_str<E>(self, v: &str) -> Result<Self::Value, E>
     where
         E: de::Error,
     {
@@ -348,7 +348,7 @@ impl<'de> de::Visitor<'de> for DeserializeBoolWithVisitor {
 
     /// We encounter a `null` value; this default implementation returns a
     /// "false" value.
-    fn visit_unit<E>(self) -> Result<bool, E>
+    fn visit_unit<E>(self) -> Result<Self::Value, E>
     where
         E: de::Error,
     {

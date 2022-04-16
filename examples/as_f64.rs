@@ -18,15 +18,27 @@ type Result<T> = std::result::Result<T, Box<dyn std::error::Error>>;
 fn main() -> Result<()> {
     sensible_env_logger::init!();
 
+    trace!("With Empty String:");
     let data = r#"
     {
         "timestamp": ""
     }"#;
 
     let m: Msg = serde_json::from_str(data).unwrap();
-
-    trace!("{m:?}");
     assert_eq!(m.timestamp, 0.0);
+    trace!("  {m:?}");
+
+    trace!("With Null:  ");
+    let data = r#"
+    {
+        "timestamp": null
+    }"#;
+
+    let m: Msg = serde_json::from_str(data).unwrap();
+    assert_eq!(m.timestamp, 0.0);
+    trace!("  {m:?}");
+
+    trace!("With U64:");
 
     let data = r#"
     {
@@ -34,8 +46,9 @@ fn main() -> Result<()> {
     }"#;
 
     let m: Msg = serde_json::from_str(data).unwrap();
+    trace!("  {m:?}");
 
-    trace!("{m:?}");
+    trace!("With String:");
 
     let data = r#"
     {
@@ -43,8 +56,9 @@ fn main() -> Result<()> {
     }"#;
 
     let m: Msg = serde_json::from_str(data).unwrap();
+    trace!("  {m:?}");
 
-    trace!("{m:?}");
+    trace!("With I64:");
 
     let data = r#"
     {
@@ -52,8 +66,7 @@ fn main() -> Result<()> {
     }"#;
 
     let m: Msg = serde_json::from_str(data).unwrap();
-
-    trace!("{m:?}");
+    trace!("  {m:?}");
 
     Ok(())
 }

@@ -18,7 +18,7 @@ pub fn as_i64<'de, D>(deserializer: D) -> Result<i64, D::Error>
 where
     D: Deserializer<'de>,
 {
-    deserializer.deserialize_any(DeserializeI64OrStringVisitor)
+    deserializer.deserialize_any(DeserializeI64WithVisitor)
 }
 
 /// De-serialize either a `str`, `u64`, `f64`, or `i64`
@@ -35,7 +35,7 @@ pub fn as_u64<'de, D>(deserializer: D) -> Result<u64, D::Error>
 where
     D: Deserializer<'de>,
 {
-    deserializer.deserialize_any(DeserializeU64OrStringVisitor)
+    deserializer.deserialize_any(DeserializeU64WithVisitor)
 }
 
 /// De-serialize either a `str`, `f64`, `u64`, or `i64` as a float value.
@@ -50,7 +50,7 @@ pub fn as_f64<'de, D>(deserializer: D) -> Result<f64, D::Error>
 where
     D: Deserializer<'de>,
 {
-    deserializer.deserialize_any(DeserializeF64OrStringVisitor)
+    deserializer.deserialize_any(DeserializeF64WithVisitor)
 }
 
 /// De-serialize either a `bool`, `str`, `u64`, or `f64` as a boolean value.
@@ -80,14 +80,14 @@ pub fn as_bool<'de, D>(deserializer: D) -> Result<bool, D::Error>
 where
     D: Deserializer<'de>,
 {
-    deserializer.deserialize_any(DeserializeBoolFromStringOrU64Visitor)
+    deserializer.deserialize_any(DeserializeBoolWithVisitor)
 }
 
 /// TODO maybe update these definitions into a macro ..?
 
-struct DeserializeU64OrStringVisitor;
+struct DeserializeU64WithVisitor;
 
-impl<'de> de::Visitor<'de> for DeserializeU64OrStringVisitor {
+impl<'de> de::Visitor<'de> for DeserializeU64WithVisitor {
     type Value = u64;
 
     fn expecting(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
@@ -135,11 +135,20 @@ impl<'de> de::Visitor<'de> for DeserializeU64OrStringVisitor {
             }
         }
     }
+
+    /// We encounter a `null` value; this default implementation returns a
+    /// "zero" value.
+    fn visit_unit<E>(self) -> Result<u64, E>
+    where
+        E: de::Error,
+    {
+        Ok(0)
+    }
 }
 
-struct DeserializeI64OrStringVisitor;
+struct DeserializeI64WithVisitor;
 
-impl<'de> de::Visitor<'de> for DeserializeI64OrStringVisitor {
+impl<'de> de::Visitor<'de> for DeserializeI64WithVisitor {
     type Value = i64;
 
     fn expecting(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
@@ -187,11 +196,20 @@ impl<'de> de::Visitor<'de> for DeserializeI64OrStringVisitor {
             }
         }
     }
+
+    /// We encounter a `null` value; this default implementation returns a
+    /// "zero" value.
+    fn visit_unit<E>(self) -> Result<i64, E>
+    where
+        E: de::Error,
+    {
+        Ok(0)
+    }
 }
 
-struct DeserializeF64OrStringVisitor;
+struct DeserializeF64WithVisitor;
 
-impl<'de> de::Visitor<'de> for DeserializeF64OrStringVisitor {
+impl<'de> de::Visitor<'de> for DeserializeF64WithVisitor {
     type Value = f64;
 
     fn expecting(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
@@ -234,11 +252,20 @@ impl<'de> de::Visitor<'de> for DeserializeF64OrStringVisitor {
             }
         }
     }
+
+    /// We encounter a `null` value; this default implementation returns a
+    /// "zero" value.
+    fn visit_unit<E>(self) -> Result<f64, E>
+    where
+        E: de::Error,
+    {
+        Ok(0.0)
+    }
 }
 
-struct DeserializeBoolFromStringOrU64Visitor;
+struct DeserializeBoolWithVisitor;
 
-impl<'de> de::Visitor<'de> for DeserializeBoolFromStringOrU64Visitor {
+impl<'de> de::Visitor<'de> for DeserializeBoolWithVisitor {
     type Value = bool;
 
     fn expecting(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
@@ -298,5 +325,14 @@ impl<'de> de::Visitor<'de> for DeserializeBoolFromStringOrU64Visitor {
             "1" | "OK" | "T" | "TRUE" | "Y" | "YES" => Ok(true),
             _ => Ok(false),
         }
+    }
+
+    /// We encounter a `null` value; this default implementation returns a
+    /// "false" value.
+    fn visit_unit<E>(self) -> Result<bool, E>
+    where
+        E: de::Error,
+    {
+        Ok(false)
     }
 }

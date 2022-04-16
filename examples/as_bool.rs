@@ -18,6 +18,27 @@ type Result<T> = std::result::Result<T, Box<dyn std::error::Error>>;
 fn main() -> Result<()> {
     sensible_env_logger::init!();
 
+    trace!("With Empty String:");
+    let data = r#"
+    {
+        "timestamp": ""
+    }"#;
+
+    let m: Msg = serde_json::from_str(data).unwrap();
+    assert!(!m.timestamp);
+    trace!("  {m:?}");
+
+    trace!("With Null:  ");
+    let data = r#"
+    {
+        "timestamp": null
+    }"#;
+
+    let m: Msg = serde_json::from_str(data).unwrap();
+    assert!(!m.timestamp);
+    trace!("  {m:?}");
+
+    trace!("With Zero (0):");
     let data = r#"
     {
         "timestamp": 0
@@ -25,8 +46,10 @@ fn main() -> Result<()> {
 
     let m: Msg = serde_json::from_str(data).unwrap();
 
-    trace!("{m:?}");
+    trace!("  {m:?}");
     assert!(!m.timestamp);
+
+    trace!("With One (1):");
 
     let data = r#"
     {
@@ -35,8 +58,10 @@ fn main() -> Result<()> {
 
     let m: Msg = serde_json::from_str(data).unwrap();
 
-    trace!("{m:?}");
+    trace!("  {m:?}");
     assert!(m.timestamp);
+
+    trace!("With String (truthy #1):");
 
     let data = r#"
     {
@@ -45,8 +70,10 @@ fn main() -> Result<()> {
 
     let m: Msg = serde_json::from_str(data).unwrap();
 
-    trace!("{m:?}");
+    trace!("  {m:?}");
     assert!(m.timestamp);
+
+    trace!("With String (truthy #2):");
 
     let data = r#"
     {
@@ -55,8 +82,10 @@ fn main() -> Result<()> {
 
     let m: Msg = serde_json::from_str(data).unwrap();
 
-    trace!("{m:?}");
+    trace!("  {m:?}");
     assert!(m.timestamp);
+
+    trace!("With String (falsy):");
 
     let data = r#"
     {
@@ -65,20 +94,10 @@ fn main() -> Result<()> {
 
     let m: Msg = serde_json::from_str(data).unwrap();
 
-    trace!("{m:?}");
+    trace!("  {m:?}");
     assert!(!m.timestamp);
 
-    let data = r#"
-    {
-        "timestamp": 123456789076543210
-    }"#;
-
-    if let Err(e) = serde_json::from_str::<Msg>(data) {
-        trace!("Expected error: {}", e);
-    } else {
-        error!("ERROR! An invalid value error should have occurred.");
-        assert_eq!(0, 1, "failure!");
-    };
+    trace!("With String (Invalid Numeric):");
 
     let data = r#"
     {
@@ -87,8 +106,24 @@ fn main() -> Result<()> {
 
     let m: Msg = serde_json::from_str(data).unwrap();
 
-    trace!("{m:?}");
+    trace!("  {m:?}");
     assert!(!m.timestamp);
+
+    trace!("With U64:");
+
+    let data = r#"
+    {
+        "timestamp": 123456789076543210
+    }"#;
+
+    if let Err(e) = serde_json::from_str::<Msg>(data) {
+        trace!("  Expected error: {}", e);
+    } else {
+        error!("  ERROR! An invalid value error should have occurred.");
+        assert_eq!(0, 1, "failure!");
+    };
+
+    trace!("With I64:");
 
     let data = r#"
     {
@@ -96,9 +131,9 @@ fn main() -> Result<()> {
     }"#;
 
     if let Err(e) = serde_json::from_str::<Msg>(data) {
-        trace!("Expected error: {}", e);
+        trace!("  Expected error: {}", e);
     } else {
-        error!("ERROR! An invalid value error should have occurred.");
+        error!("  ERROR! An invalid value error should have occurred.");
         assert_eq!(0, 1, "failure!");
     };
 

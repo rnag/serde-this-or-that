@@ -18,7 +18,6 @@
 //!
 //! ```rust
 //! use serde_json::from_str;
-//!
 //! use serde_this_or_that::{as_bool, as_f64, as_u64, Deserialize};
 //!
 //! #[derive(Deserialize, Debug)]

@@ -132,7 +132,7 @@ impl<'de> de::Visitor<'de> for DeserializeU64WithVisitor {
     where
         E: de::Error,
     {
-        Ok(v as u64)
+        Ok(v.round() as u64)
     }
 
     fn visit_str<E>(self, v: &str) -> Result<u64, E>
@@ -144,6 +144,8 @@ impl<'de> de::Visitor<'de> for DeserializeU64WithVisitor {
             Err(_) => {
                 if v.is_empty() {
                     Ok(0)
+                } else if let Ok(f) = v.parse::<f64>() {
+                    Ok(f.round() as u64)
                 } else {
                     Err(E::invalid_value(Unexpected::Str(v), &self))
                 }
@@ -193,7 +195,7 @@ impl<'de> de::Visitor<'de> for DeserializeI64WithVisitor {
     where
         E: de::Error,
     {
-        Ok(v as i64)
+        Ok(v.round() as i64)
     }
 
     fn visit_str<E>(self, v: &str) -> Result<i64, E>
@@ -205,6 +207,8 @@ impl<'de> de::Visitor<'de> for DeserializeI64WithVisitor {
             Err(_) => {
                 if v.is_empty() {
                     Ok(0)
+                } else if let Ok(f) = v.parse::<f64>() {
+                    Ok(f.round() as i64)
                 } else {
                     Err(E::invalid_value(Unexpected::Str(v), &self))
                 }

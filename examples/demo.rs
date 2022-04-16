@@ -33,5 +33,21 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     assert_eq!(s.num_attempts, 0);
     assert_eq!(s.grade, 81.0);
 
+    let string = r#"
+    {
+        "isActive": false,
+        "numAttempts": 1.7,
+        "grade": null
+    }
+    "#;
+
+    let s: MyStruct = from_str(string)?;
+
+    trace!("{s:#?}");
+
+    assert!(!s.is_active);
+    assert_eq!(s.num_attempts, 2);
+    assert_eq!(s.grade, 0.0);
+
     Ok(())
 }

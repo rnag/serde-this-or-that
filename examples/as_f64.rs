@@ -38,11 +38,11 @@ fn main() -> Result<()> {
     assert_eq!(m.timestamp, 0.0);
     trace!("  {m:?}");
 
-    trace!("With U64:");
+    trace!("With F64:");
 
     let data = r#"
     {
-        "timestamp": 123456789076543210
+        "timestamp": 123456789.076543210
     }"#;
 
     let m: Msg = serde_json::from_str(data).unwrap();
@@ -53,6 +53,16 @@ fn main() -> Result<()> {
     let data = r#"
     {
         "timestamp": "123456789076543210"
+    }"#;
+
+    let m: Msg = serde_json::from_str(data).unwrap();
+    trace!("  {m:?}");
+
+    trace!("With U64:");
+
+    let data = r#"
+    {
+        "timestamp": 123456789076543210
     }"#;
 
     let m: Msg = serde_json::from_str(data).unwrap();

@@ -1,0 +1,25 @@
+name: test
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  schedule:
+    - cron: '0 0 * * 0'
+
+jobs:
+  build:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Run Tests
+        uses: actions-rs/cargo@v1
+        with:
+          command: test
+        # Uncomment if your test needs environment variables. You will also
+        # need to add the secret to GitHub Actions (under Repo settings).
+        # env:
+          # MY_API_TOKEN: ${{ secrets.MY_API_TOKEN }}

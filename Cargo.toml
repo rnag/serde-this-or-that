@@ -1,0 +1,54 @@
+[package]
+name = "serde-this-or-that"
+version = "0.1.0"
+authors = ["Ritvik Nag <rv.kvetch@gmail.com>"]
+description = "Custom deserialization for fields that can be specified as multiple types."
+documentation = "https://docs.rs/serde-this-or-that"
+repository = "https://github.com/rnag/serde-this-or-that"
+readme = "README.md"
+keywords = ["serde-this-or-that",
+            # some ideas:
+            #   "logging",
+            #   "api",
+            #   "async",
+            ]
+categories = [
+    # "api-bindings"
+]
+license = "MIT"
+edition = "2021"
+exclude = [
+    # (optional) list any files we don't want to publish to crates.io
+    # for example, assume the below is a folder which contains large `mp4` files:
+    #   "examples/assets"
+]
+
+# See here for more info: https://blog.rust-lang.org/2020/03/15/docs-rs-opt-into-fewer-targets.html
+
+[package.metadata.docs.rs]
+all-features = true
+targets = ["x86_64-unknown-linux-gnu"]
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+
+[dev-dependencies]
+# version_sync: to ensure versions in `Cargo.toml` and `README.md` are in sync
+version-sync = "0.9.4"
+# cargo-bump: to bump package version and tag a commit at the same time.
+# actually, the docs recommend installing this globally:
+#   $ git clone https://github.com/rnag/cargo-bump && cd cargo-bump && cargo install --path . && cd .. && rm -rf cargo-bump
+# logging utilities
+log = "^0.4"
+sensible-env-logger = "0.1.0"
+# tokio: for `async` support
+tokio = { version = "^1.0", features = ["macros", "rt-multi-thread"] }
+# Some useful libraries - uncomment if needed :-)
+# tabled = "0.4.2"
+# indoc = "1.0.4"
+# criterion = "0.3.5"
+
+### FEATURES #################################################################
+
+[features]

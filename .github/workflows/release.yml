@@ -1,0 +1,29 @@
+name: Release
+
+on:
+  push:
+    tags: [ 'v*' ]
+
+jobs:
+  release:
+    name: Publish to GitHub releases
+    runs-on: ubuntu-latest
+    if: "startsWith(github.ref, 'refs/tags/')"
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 1
+      - name: Set variables
+        id: vars
+        run: |
+          CHANGELOG=$(awk '/^## v/ {n=NR; i++}; i==1 {if (NR==n) {print "## Release Notes"} else {print}}; i>1 {exit}' CHANGELOG.md \
+            | python3 -c 'import sys, json; print(json.dumps(sys.stdin.read()))')
+          echo "::set-output name=changelog::$CHANGELOG"
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+$
+          prerelease: ${{ contains(github.ref, 'alpha') || contains(github.ref, 'beta') }}
+          generate_release_notes: true
+          body: ${{ fromJson(steps.vars.outputs.changelog) }}

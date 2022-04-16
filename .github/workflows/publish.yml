@@ -1,0 +1,56 @@
+name: Publish Crate
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - Cargo.toml
+  repository_dispatch:
+    types: publish
+
+# After you create the GitHub repo, head over to `crates.io` and create
+# an API Token, or use the link below:
+#   <https://crates.io/settings/tokens>
+#
+# Once you have an API token, add it as a Repository Secret (CARGO_TOKEN)
+# under the GitHub repo, so that it can be used by GitHub Actions to deploy
+# to `crates.io` whenever a new tag is pushed to GitHub:
+#   <https://github.com/rnag/serde-this-or-that/settings/secrets/actions/new>
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v2
+
+      - name: Set variables
+        id: vars
+        run: |
+          NAME=$(cargo metadata -q --no-deps | jq -r '.packages[0].name')
+          VERSION=$(cargo metadata -q --no-deps | jq -r '.packages[0].version')
+          echo "::set-output name=name::$NAME"
+          echo "::set-output name=version::$VERSION"
+          echo "Found $NAME-$VERSION"
+
+      - name: Lookup ${{ steps.vars.outputs.version }} tag
+        id: need-release
+        uses: actions/github-script@v3
+        with:
+          script: |
+            const version = '${{ steps.vars.outputs.version }}'
+            const tags = await github.repos.listTags(context.repo)
+            if (tags.data.some(tag => tag.name == version)) {
+                core.info(`Found ${version} tag -- will proceed with publishing`)
+                return true
+            }
+            core.info(`Found no ${version} tag -- will skip publish step`)
+            return false
+
+      # The result from above is JSON-encoded, meaning that we
+      # end up with the string 'true', not the Boolean true.
+      - if: steps.need-release.outputs.result == 'true'
+        name: Publish crate to crates.io
+        run: |
+          echo "Publishing ${{ steps.vars.outputs.name }}-${{ steps.vars.outputs.version }}"
+          cargo publish --token ${{ secrets.CARGO_TOKEN }}

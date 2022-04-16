@@ -19,9 +19,9 @@ serde_json = "1.0"
 
 ## Getting started
 
-Add some usage to your application.
+Here's an example of using `serde-this-or-that` in code.
 
-Here's an example of using `serde-this-or-that` in code:
+> Note: you can also use `serde::Deserialize` if it is easier.
 
 ```rust
 use serde_json::from_str;

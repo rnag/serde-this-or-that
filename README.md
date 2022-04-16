@@ -34,20 +34,25 @@ struct MyStruct {
     is_active: bool,
     #[serde(deserialize_with = "as_u64")]
     num_attempts: u64,
+    #[serde(deserialize_with = "as_f64")]
+    grade: f64,
 }
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let string = r#"
     {
         "isActive": "True",
-        "numAttempts": ""
+        "numAttempts": "",
+        "grade": "81"
     }
     "#;
 
     let s: MyStruct = from_str(string)?;
+    println!("{s:#?}");
 
     assert!(s.is_active);
     assert_eq!(s.num_attempts, 0);
+    assert_eq!(s.grade, 81);
 
     Ok(())
 }

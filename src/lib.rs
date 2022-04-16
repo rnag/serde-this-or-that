@@ -1,4 +1,4 @@
-#![doc(html_root_url = "https://docs.rs/serde-this-or-that/0.1.0")]
+#![doc(html_root_url = "https://docs.rs/serde-this-or-that/0.1.1")]
 #![warn(rust_2018_idioms, missing_docs)]
 #![deny(warnings, dead_code, unused_imports, unused_mut)]
 
@@ -34,14 +34,14 @@
 //!     let string = r#"
 //!     {
 //!         "isActive": "True",
-//!         "numAttempts": "3"
+//!         "numAttempts": ""
 //!     }
 //!     "#;
 //!
 //!     let s: MyStruct = from_str(string)?;
 //!
 //!     assert!(s.is_active);
-//!     assert_eq!(s.num_attempts, 3);
+//!     assert_eq!(s.num_attempts, 0);
 //!
 //!     Ok(())
 //! }

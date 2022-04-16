@@ -16,12 +16,32 @@
 //!
 //! ## Usage
 //!
-//! ```no_run
-//! use serde_this_or_that::*;
+//! ```rust
+//! use serde_json::from_str;
 //!
-//! #[tokio::main]
-//! async fn main() -> Result<(), Box<dyn std::error::Error>> {
-//!     println!("Hello world!");
+//! use serde_this_or_that::{as_bool, as_u64, Deserialize};
+//!
+//! #[derive(Deserialize)]
+//! #[serde(rename_all = "camelCase")]
+//! struct MyStruct {
+//!     #[serde(deserialize_with = "as_bool")]
+//!     is_active: bool,
+//!     #[serde(deserialize_with = "as_u64")]
+//!     num_attempts: u64,
+//! }
+//!
+//! fn main() -> Result<(), Box<dyn std::error::Error>> {
+//!     let string = r#"
+//!     {
+//!         "isActive": "True",
+//!         "numAttempts": "3"
+//!     }
+//!     "#;
+//!
+//!     let s: MyStruct = from_str(string)?;
+//!
+//!     assert!(s.is_active);
+//!     assert_eq!(s.num_attempts, 3);
 //!
 //!     Ok(())
 //! }
@@ -32,6 +52,17 @@
 //! You can check out sample usage of this crate in the [examples/](https://github.com/rnag/serde-this-or-that/tree/main/examples)
 //! folder in the project repo on GitHub.
 //!
+//! ## Performance
+//!
+//! The benchmarks suggest that implementing a custom
+//! `Visitor` as `serde-this-or-that` does, performs
+//! on average **about 10x** better than an approach with an [untagged enum].
+//!
+//! The benchmarks live in the [benches/](https://github.com/rnag/serde-this-or-that/tree/main/benches)
+//! folder, and can be run with `cargo bench`.
+//!
+//! [untagged enum]: https://stackoverflow.com/a/66961340/10237506
+//!
 //! ## Readme Docs
 //!
 //! You can find the crate's readme documentation on the
@@ -41,11 +72,40 @@
 //! [`README.md`]: https://github.com/rnag/serde-this-or-that
 //!
 
+mod de;
+
+pub use de::{as_bool, as_f64, as_i64, as_u64};
+pub use serde;
+pub use serde::*;
+
 #[cfg(test)]
 mod tests {
+    use super::*;
+
+    use serde::Deserialize;
+    use serde_json::from_str;
+
     #[test]
-    fn it_works() {
-        let result = 2 + 2;
-        assert_eq!(result, 4);
+    fn serde_this_or_that_works() {
+        #[derive(Deserialize)]
+        #[serde(rename_all = "camelCase")]
+        struct MyStruct {
+            #[serde(deserialize_with = "as_bool")]
+            is_active: bool,
+            #[serde(deserialize_with = "as_u64")]
+            num_attempts: u64,
+        }
+
+        let string = r#"
+        {
+            "isActive": "True",
+            "numAttempts": "3"
+        }
+        "#;
+
+        let s: MyStruct = from_str(string).unwrap();
+
+        assert!(s.is_active);
+        assert_eq!(s.num_attempts, 3)
     }
 }

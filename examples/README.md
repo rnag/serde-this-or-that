@@ -29,10 +29,10 @@ Then, simply `cd` into the project folder:
 From here, you can use `rx` to build and run
 any of the examples individually.
 
-In particular, here's a sample usage of running `examples/my_example.rs`:
+In particular, here's a sample usage of running `examples/as_bool.rs`:
 
 ```shell
-❯❯ rx my_example
+❯❯ rx as_bool
 ```
 
 If you run the command without any arguments, you can select 
@@ -44,10 +44,10 @@ from the list of available examples:
 
 To pass arguments to a script, you can include them after the `--`.
 
-For instance, here's an example of passing arguments to the `my_example` script:
+For instance, here's an example of passing arguments to the `as_u64` script:
 
 ```shell
-❯❯ rx my_example -- \
+❯❯ rx as_u64 -- \
      -n "My Name" \
      --my-arg 123
 ```

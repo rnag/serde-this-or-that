@@ -11,12 +11,10 @@ Custom deserialization for fields that can be specified as multiple types.
 
 This crate works with Cargo with a `Cargo.toml` like:
 
-<!-- Note: the `tokio` dependency can be omitted if this crate doesn't
-require any `async` features. -->
 ```toml
 [dependencies]
-serde-this-or-that = "0.1.0"
-tokio = { version = "1", features = ["full"] }
+serde-this-or-that = "0.1"
+serde_json = "1.0"
 ```
 
 ## Getting started
@@ -26,11 +24,30 @@ Add some usage to your application.
 Here's an example of using `serde-this-or-that` in code:
 
 ```rust
-use serde_this_or_that::*;
+use serde_json::from_str;
+use serde_this_or_that::{as_bool, as_u64, Deserialize};
 
-#[tokio::main]
-async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    println!("Hello world!");
+#[derive(Deserialize)]
+#[serde(rename_all = "camelCase")]
+struct MyStruct {
+    #[serde(deserialize_with = "as_bool")]
+    is_active: bool,
+    #[serde(deserialize_with = "as_u64")]
+    num_attempts: u64,
+}
+
+fn main() -> Result<(), Box<dyn std::error::Error>> {
+    let string = r#"
+    {
+        "isActive": "True",
+        "numAttempts": "3"
+    }
+    "#;
+
+    let s: MyStruct = from_str(string)?;
+
+    assert!(s.is_active);
+    assert_eq!(s.num_attempts, 3);
 
     Ok(())
 }
@@ -40,6 +57,17 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
 You can check out sample usage of this crate in the [examples/](https://github.com/rnag/serde-this-or-that/tree/main/examples)
 folder in the project repo on GitHub.
+
+## Performance
+
+The benchmarks suggest that implementing a custom
+`Visitor` as `serde-this-or-that` does, performs
+on average **about 10x** better than an approach with an [untagged enum].
+
+The benchmarks live in the [benches/](https://github.com/rnag/serde-this-or-that/tree/main/benches)
+folder, and can be run with `cargo bench`.
+
+[untagged enum]: https://stackoverflow.com/a/66961340/10237506
 
 ## Contributing
 

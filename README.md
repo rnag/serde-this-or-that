@@ -62,7 +62,7 @@ folder in the project repo on GitHub.
 
 The benchmarks suggest that implementing a custom
 `Visitor` as `serde-this-or-that` does, performs
-on average **about 10x** better than an approach with an [untagged enum].
+on average **about 10x better** than an approach with an [untagged enum].
 
 The benchmarks live in the [benches/](https://github.com/rnag/serde-this-or-that/tree/main/benches)
 folder, and can be run with `cargo bench`.

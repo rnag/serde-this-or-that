@@ -21,6 +21,10 @@ keywords = ["serde",
 categories = ["encoding"]
 license = "MIT"
 edition = "2021"
+# Exclude the `examples/` and `benches/` folders when publishing the crate,
+# as these can always be found on the project repo on GitHub.
+# See also: https://users.rust-lang.org/t/what-to-include-when-publishing-a-crate/51992
+exclude = [".github/", ".gitignore", "benches/", "examples/"]
 
 # See here for more info: https://blog.rust-lang.org/2020/03/15/docs-rs-opt-into-fewer-targets.html
 

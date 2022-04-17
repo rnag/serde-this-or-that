@@ -69,7 +69,9 @@ derive = ["serde/derive"]
 [[bench]]
 name = "as_u64"
 harness = false
+path = "benches/as_u64.rs"
 
 [[bench]]
 name = "as_bool"
 harness = false
+path = "benches/as_bool.rs"

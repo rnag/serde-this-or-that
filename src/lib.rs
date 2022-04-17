@@ -17,8 +17,9 @@
 //! ## Usage
 //!
 //! ```rust
+//! use serde::Deserialize;
 //! use serde_json::from_str;
-//! use serde_this_or_that::{as_bool, as_f64, as_u64, Deserialize};
+//! use serde_this_or_that::{as_bool, as_f64, as_u64};
 //!
 //! #[derive(Deserialize, Debug)]
 //! #[serde(rename_all = "camelCase")]
@@ -79,6 +80,7 @@
 mod de_impl;
 
 pub use de_impl::{as_bool, as_f64, as_i64, as_string, as_u64};
+#[doc(hidden)]
 pub use serde;
 #[doc(hidden)]
 pub use serde::*;

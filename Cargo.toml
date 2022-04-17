@@ -6,7 +6,18 @@ description = "Custom deserialization for fields that can be specified as multip
 documentation = "https://docs.rs/serde-this-or-that"
 repository = "https://github.com/rnag/serde-this-or-that"
 readme = "README.md"
-keywords = ["serde", "utilities", "deserialization", "visitor", "multiple-type"]
+keywords = ["serde",
+            # I would have liked to add the below keyword, but of course
+            # crates.io has a limit of 5 keywords, so well.. that's that. :\
+            # "utilities",
+            # And now surprisingly, I found this keyword to be super useful!
+            # I'm actually partially shocked that crates.io doesn't use the
+            # crate name to automagically satisfy user search requests.
+            "this-or-that",
+            # Of course, the rest that follow are also pretty solid too.
+            "deserialization",
+            "visitor",
+            "multiple-type"]
 categories = ["encoding"]
 license = "MIT"
 edition = "2021"
@@ -20,14 +31,19 @@ targets = ["x86_64-unknown-linux-gnu"]
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-serde = { version = "1.0.136", features = ["derive"] }
+# No `derive` features necessary, just the stock `serde` by itself :-)
+serde = "1.0.136"
 
 [dev-dependencies]
+# We'll need the `derive` feature for examples and tests.
+serde = { version = "^1", features = ["derive"] }
+# And don't forget `serde-json`.
+serde_json = "^1"
+# This one's for running benchmarks, with `cargo bench`.
 criterion = { version = "0.3.5", features = ["html_reports"] }
+# Here we have our logging utilities, mainly for examples.
 log = "^0.4"
 sensible-env-logger = "0.2.0"
-serde_json = "^1"
-timeit = "0.1.2"
 # version_sync: to ensure versions in `Cargo.toml` and `README.md` are in sync
 version-sync = "0.9.4"
 # cargo-bump: to bump package version and tag a commit at the same time.
@@ -37,7 +53,14 @@ version-sync = "0.9.4"
 ### FEATURES #################################################################
 
 [features]
-
+# Enable nothing by default.
+default = []
+# The `derive` feature can be enabled when adding the dependency, and then
+# it can be used like, e.g.:
+#   use serde_this_or_that::Deserialize;
+# Note, this requires that a project's `Cargo.toml` be updated as follows:
+#   serde-this-or-that = { version = "*", features = ["derive"] }
+derive = ["serde/derive"]
 
 [[bench]]
 name = "as_u64"

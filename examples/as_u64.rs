@@ -48,6 +48,17 @@ fn main() -> Result<()> {
     let m: Msg = serde_json::from_str(data).unwrap();
     trace!("  {m:?}");
 
+    trace!("With F64:");
+
+    let data = r#"
+    {
+        "timestamp": 0.5
+    }"#;
+
+    let m: Msg = serde_json::from_str(data).unwrap();
+    trace!("  {m:?}");
+    assert_eq!(m.timestamp, 1);
+
     trace!("With String:  ");
 
     let data = r#"

@@ -20,9 +20,9 @@ serde_json = "1"
 
 ## Getting started
 
-Here's an example of using `serde-this-or-that` in code.
+Add some usage to your application.
 
-> Note: you can also use `serde::Deserialize` if it is easier.
+Here's an example of using `serde-this-or-that` in code:
 
 ```rust
 use serde::Deserialize;

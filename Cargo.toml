@@ -1,12 +1,12 @@
 [package]
 name = "serde-this-or-that"
-version = "0.1.1"
+version = "0.2.0"
 authors = ["Ritvik Nag <rv.kvetch@gmail.com>"]
 description = "Custom deserialization for fields that can be specified as multiple types."
 documentation = "https://docs.rs/serde-this-or-that"
 repository = "https://github.com/rnag/serde-this-or-that"
 readme = "README.md"
-keywords = ["serde", "utilities", "untagged-enum", "deserialization", "this-or-that"]
+keywords = ["serde", "utilities", "deserialization", "visitor", "multiple-type"]
 categories = ["encoding"]
 license = "MIT"
 edition = "2021"
@@ -23,7 +23,7 @@ targets = ["x86_64-unknown-linux-gnu"]
 serde = { version = "1.0.136", features = ["derive"] }
 
 [dev-dependencies]
-criterion = "0.3.5"
+criterion = { version = "0.3.5", features = ["html_reports"] }
 log = "^0.4"
 sensible-env-logger = "0.2.0"
 serde_json = "^1"

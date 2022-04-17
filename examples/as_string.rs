@@ -4,12 +4,12 @@
 #[macro_use]
 extern crate log;
 
-use serde_this_or_that::{as_bool, Deserialize};
+use serde_this_or_that::{as_string, Deserialize};
 
 #[derive(Clone, Debug, Deserialize)]
 pub struct Msg {
-    #[serde(deserialize_with = "as_bool")]
-    pub timestamp: bool,
+    #[serde(deserialize_with = "as_string")]
+    pub timestamp: String,
 }
 
 // A simple type alias so as to DRY.
@@ -25,7 +25,7 @@ fn main() -> Result<()> {
     }"#;
 
     let m: Msg = serde_json::from_str(data).unwrap();
-    assert!(!m.timestamp);
+    assert!(m.timestamp.is_empty());
     trace!("  {m:?}");
 
     trace!("With Null:  ");
@@ -35,7 +35,7 @@ fn main() -> Result<()> {
     }"#;
 
     let m: Msg = serde_json::from_str(data).unwrap();
-    assert!(!m.timestamp);
+    assert!(m.timestamp.is_empty());
     trace!("  {m:?}");
 
     trace!("With Zero (0):");
@@ -47,67 +47,31 @@ fn main() -> Result<()> {
     let m: Msg = serde_json::from_str(data).unwrap();
 
     trace!("  {m:?}");
-    assert!(!m.timestamp);
+    assert_eq!(m.timestamp, "0");
 
-    trace!("With One (1):");
+    trace!("With String:");
 
     let data = r#"
     {
-        "timestamp": 1
+        "timestamp": "hello, world!"
     }"#;
 
     let m: Msg = serde_json::from_str(data).unwrap();
 
     trace!("  {m:?}");
-    assert!(m.timestamp);
+    assert_eq!(m.timestamp, "hello, world!");
 
-    trace!("With String (truthy #1):");
+    trace!("With Bool:");
 
     let data = r#"
     {
-        "timestamp": "tRuE"
+        "timestamp": false
     }"#;
 
     let m: Msg = serde_json::from_str(data).unwrap();
 
     trace!("  {m:?}");
-    assert!(m.timestamp);
-
-    trace!("With String (truthy #2):");
-
-    let data = r#"
-    {
-        "timestamp": "Y"
-    }"#;
-
-    let m: Msg = serde_json::from_str(data).unwrap();
-
-    trace!("  {m:?}");
-    assert!(m.timestamp);
-
-    trace!("With String (falsy):");
-
-    let data = r#"
-    {
-        "timestamp": "nope!"
-    }"#;
-
-    let m: Msg = serde_json::from_str(data).unwrap();
-
-    trace!("  {m:?}");
-    assert!(!m.timestamp);
-
-    trace!("With String (Invalid Numeric):");
-
-    let data = r#"
-    {
-        "timestamp": "123456789076543210"
-    }"#;
-
-    let m: Msg = serde_json::from_str(data).unwrap();
-
-    trace!("  {m:?}");
-    assert!(!m.timestamp);
+    assert_eq!(m.timestamp, "false");
 
     trace!("With U64:");
 
@@ -116,12 +80,10 @@ fn main() -> Result<()> {
         "timestamp": 123456789076543210
     }"#;
 
-    if let Err(e) = serde_json::from_str::<Msg>(data) {
-        trace!("  Expected error: {}", e);
-    } else {
-        error!("  ERROR! An invalid value error should have occurred.");
-        assert_eq!(0, 1, "failure!");
-    };
+    let m: Msg = serde_json::from_str(data).unwrap();
+
+    trace!("  {m:?}");
+    assert_eq!(m.timestamp, "123456789076543210");
 
     trace!("With I64:");
 
@@ -130,12 +92,22 @@ fn main() -> Result<()> {
         "timestamp": -123
     }"#;
 
-    if let Err(e) = serde_json::from_str::<Msg>(data) {
-        trace!("  Expected error: {}", e);
-    } else {
-        error!("  ERROR! An invalid value error should have occurred.");
-        assert_eq!(0, 1, "failure!");
-    };
+    let m: Msg = serde_json::from_str(data).unwrap();
+
+    trace!("  {m:?}");
+    assert_eq!(m.timestamp, "-123");
+
+    trace!("With F64:");
+
+    let data = r#"
+    {
+        "timestamp": 1234567890.76543210
+    }"#;
+
+    let m: Msg = serde_json::from_str(data).unwrap();
+
+    trace!("  {m:?}");
+    assert_eq!(m.timestamp, "1234567890.7654321");
 
     Ok(())
 }

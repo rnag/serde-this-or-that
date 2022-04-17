@@ -1,5 +1,4 @@
 use criterion::{black_box, criterion_group, criterion_main, Criterion};
-use serde::{de, Deserializer};
 use serde_json::from_str;
 
 use serde_this_or_that::*;

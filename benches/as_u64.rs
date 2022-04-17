@@ -1,5 +1,4 @@
 use criterion::{black_box, criterion_group, criterion_main, Criterion};
-use serde::Deserializer;
 use serde_json::from_str;
 
 use serde_this_or_that::*;
@@ -47,6 +46,18 @@ fn criterion_benchmark(c: &mut Criterion) {
         b.iter(|| from_str::<MsgCustom>(black_box(data)).unwrap())
     });
     c.bench_function("de untagged (input: u64)", |b| {
+        b.iter(|| from_str::<MsgUntagged>(black_box(data)).unwrap())
+    });
+
+    let data = r#"
+    {
+        "timestamp": ""
+    }"#;
+
+    c.bench_function("de custom (input: str <empty>)", |b| {
+        b.iter(|| from_str::<MsgCustom>(black_box(data)).unwrap())
+    });
+    c.bench_function("de untagged (input: str <empty>)", |b| {
         b.iter(|| from_str::<MsgUntagged>(black_box(data)).unwrap())
     });
 

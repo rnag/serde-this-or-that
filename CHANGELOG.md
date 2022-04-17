@@ -17,6 +17,20 @@ Possible header types:
   - `other_method()`
 -->
 
+## v0.2.0 (2022-04-17)
+
+### Features
+
+- Add `as_string` helper function, to coerce values to an owned `String` type.
+- Update to handle *empty strings* and `null` values in JSON (should be deserialized as "zero" values).
+- Round `floats` when converting to `u64` or `i64`.
+- Similarly, handle floating-point values in strings when converting to `u64` or `i64`.
+- Refactor to use `Result<Self::Value, E>` everywhere, instead of `Result<T, E>`.
+- Rename `de.rs` -> `de_impl.rs` to avoid name conflicts.
+- Add example `as_string.rs`
+- Update *examples/*
+- Update docs
+
 ## v0.1.1 (2022-04-16)
 
 - Fix docs

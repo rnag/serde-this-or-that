@@ -44,10 +44,10 @@ from the list of available examples:
 
 To pass arguments to a script, you can include them after the `--`.
 
-For instance, here's an example of passing arguments to the `as_u64` script:
+For instance, here's an example of passing arguments to the `demo` script:
 
 ```shell
-❯❯ rx as_u64 -- \
+❯❯ rx demo -- \
      -n "My Name" \
      --my-arg 123
 ```

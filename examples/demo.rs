@@ -1,4 +1,4 @@
-use serde_this_or_that::{as_bool, as_u64, Deserialize};
+use serde_this_or_that::{as_bool, as_f64, as_u64, Deserialize};
 
 use log::trace;
 use serde_json::from_str;
@@ -10,6 +10,8 @@ struct MyStruct {
     is_active: bool,
     #[serde(deserialize_with = "as_u64")]
     num_attempts: u64,
+    #[serde(deserialize_with = "as_f64")]
+    grade: f64,
 }
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -18,16 +20,34 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let string = r#"
     {
         "isActive": "True",
-        "numAttempts": "3"
+        "numAttempts": "",
+        "grade": "81"
     }
     "#;
 
     let s: MyStruct = from_str(string)?;
 
-    trace!("{s:?}");
+    trace!("{s:#?}");
 
     assert!(s.is_active);
-    assert_eq!(s.num_attempts, 3);
+    assert_eq!(s.num_attempts, 0);
+    assert_eq!(s.grade, 81.0);
+
+    let string = r#"
+    {
+        "isActive": false,
+        "numAttempts": 1.7,
+        "grade": null
+    }
+    "#;
+
+    let s: MyStruct = from_str(string)?;
+
+    trace!("{s:#?}");
+
+    assert!(!s.is_active);
+    assert_eq!(s.num_attempts, 2);
+    assert_eq!(s.grade, 0.0);
 
     Ok(())
 }

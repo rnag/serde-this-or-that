@@ -1,7 +1,12 @@
-use serde_this_or_that::{as_bool, as_f64, as_u64, Deserialize};
+#![deny(warnings)]
+#![warn(rust_2018_idioms)]
 
-use log::trace;
+#[macro_use]
+extern crate log;
+
+use serde::Deserialize;
 use serde_json::from_str;
+use serde_this_or_that::{as_bool, as_f64, as_u64};
 
 #[derive(Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]

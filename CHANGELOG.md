@@ -17,6 +17,17 @@ Possible header types:
   - `other_method()`
 -->
 
+## v0.3.0 (2022-04-17)
+
+### Breaking Changes
+- Remove dependency on the `derive` feature of `serde`
+  - Add it as an optional feature named `derive` instead.
+
+### Features
+- Replace `utilities` keyword with `this-or-that`, as I want crate to be
+ searchable when someone types "this or that".
+- Update docs.
+
 ## v0.2.0 (2022-04-17)
 
 ### Features

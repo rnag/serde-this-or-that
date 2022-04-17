@@ -13,8 +13,9 @@ This crate works with Cargo with a `Cargo.toml` like:
 
 ```toml
 [dependencies]
-serde-this-or-that = "0.2"
-serde_json = "1.0"
+serde-this-or-that = "0.3"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
 ```
 
 ## Getting started
@@ -24,8 +25,9 @@ Here's an example of using `serde-this-or-that` in code.
 > Note: you can also use `serde::Deserialize` if it is easier.
 
 ```rust
+use serde::Deserialize;
 use serde_json::from_str;
-use serde_this_or_that::{as_bool, as_f64, as_u64, Deserialize};
+use serde_this_or_that::{as_bool, as_f64, as_u64};
 
 #[derive(Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]

@@ -4,7 +4,8 @@
 #[macro_use]
 extern crate log;
 
-use serde_this_or_that::{as_string, Deserialize};
+use serde::Deserialize;
+use serde_this_or_that::as_string;
 
 #[derive(Clone, Debug, Deserialize)]
 pub struct Msg {

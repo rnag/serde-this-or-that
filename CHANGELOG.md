@@ -17,10 +17,6 @@ Possible header types:
   - `other_method()`
 -->
 
-## v0.1.1 (2022-04-16)
-
-- Fix docs
-
 ## v0.2.0 (2022-04-17)
 
 ### Features
@@ -33,6 +29,10 @@ Possible header types:
 - Rename `de.rs` -> `de_impl.rs` to avoid name conflicts.
 - Add example `as_string.rs`
 - Update *examples/*
+
+## v0.1.1 (2022-04-16)
+
+- Fix docs
 
 ## v0.1.0 (2022-04-16)
 

@@ -1,4 +1,4 @@
-#![doc(html_root_url = "https://docs.rs/serde-this-or-that/0.1.1")]
+#![doc(html_root_url = "https://docs.rs/serde-this-or-that/0.2.0")]
 #![warn(rust_2018_idioms, missing_docs)]
 #![deny(warnings, dead_code, unused_imports, unused_mut)]
 

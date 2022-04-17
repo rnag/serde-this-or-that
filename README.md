@@ -13,7 +13,7 @@ This crate works with Cargo with a `Cargo.toml` like:
 
 ```toml
 [dependencies]
-serde-this-or-that = "0.1"
+serde-this-or-that = "0.2"
 serde_json = "1.0"
 ```
 

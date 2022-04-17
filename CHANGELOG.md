@@ -17,6 +17,15 @@ Possible header types:
   - `other_method()`
 -->
 
+## v0.3.0 (2022-04-17)
+
+### Breaking Changes
+- Remove dependency on the `derive` feature of `serde`
+  - Add it as an optional feature named `derive` instead.
+
+### Features
+- Update docs
+
 ## v0.2.0 (2022-04-17)
 
 ### Features

@@ -13,9 +13,9 @@ This crate works with Cargo with a `Cargo.toml` like:
 
 ```toml
 [dependencies]
-serde-this-or-that = "0.2"
-serde = { version = "1.0", features = ["derive"] }
-serde_json = "1.0"
+serde-this-or-that = "0.3"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
 ```
 
 ## Getting started

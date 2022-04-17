@@ -45,6 +45,8 @@ serde = { version = "^1", features = ["derive"] }
 serde_json = "^1"
 # This one's for running benchmarks, with `cargo bench`.
 criterion = { version = "0.3.5", features = ["html_reports"] }
+# serde_with: used for a baseline comparison in the benchmarks.
+serde_with = "1.12.1"
 # Here we have our logging utilities, mainly for use in examples.
 log = "^0.4"
 sensible-env-logger = "0.2.0"

@@ -77,3 +77,8 @@ path = "benches/as_u64.rs"
 name = "as_bool"
 harness = false
 path = "benches/as_bool.rs"
+
+[[bench]]
+name = "serde_with"
+harness = false
+path = "benches/serde_with.rs"

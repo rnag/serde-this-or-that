@@ -1,7 +1,6 @@
 use std::{f64, fmt};
 
-use crate::de;
-use crate::de::{Deserializer, Unexpected};
+use crate::de::{self, Deserializer, Unexpected};
 
 /// De-serialize either a `null`, `str`, `i64`, `f64`, or `u64`
 /// as a *signed* value.

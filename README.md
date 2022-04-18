@@ -82,7 +82,7 @@ on average **about 15x better** than an approach with an [untagged enum].
 A separate benchmark compares performance against the [serde_with] crate:
 it indicates both crates perform about the same,
 assuming only [`DisplayFromStr`] is used.
-But when [`PickFirst`] is involved, `serde_this_or_that` appears to
+But when [`PickFirst`] is involved, `serde-this-or-that` appears to
 perform **about 12x better** in an average case.
 
 The benchmarks live in the [benches/](https://github.com/rnag/serde-this-or-that/tree/main/benches)

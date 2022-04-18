@@ -17,6 +17,18 @@ Possible header types:
   - `other_method()`
 -->
 
+## v0.4.0 (2022-04-18)
+
+### Features
+- Add benchmarks to compare performance against `serde_with`.
+- Flatten some nested `match` arms into simpler `if` statements.
+- Update `as_bool`
+  - Update to check for a new "truthy" string value of  `ON`.
+  - Add pattern matching to check common *true/false* values **before** converting the string
+    to uppercase, which should make it overall more efficient.
+- `serde_this_or_that` is now on par - in terms of performance - with `serde_with`! This is
+  truly great news.
+
 ## v0.3.0 (2022-04-17)
 
 ### Breaking Changes

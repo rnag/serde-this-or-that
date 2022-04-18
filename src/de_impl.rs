@@ -65,6 +65,7 @@ where
 ///
 ///   - `1`
 ///   - `OK`
+///   - `ON`
 ///   - `T`
 ///   - `TRUE`
 ///   - `Y`
@@ -138,17 +139,14 @@ impl<'de> de::Visitor<'de> for DeserializeU64WithVisitor {
     where
         E: de::Error,
     {
-        match v.parse::<u64>() {
-            Ok(s) => Ok(s),
-            Err(_) => {
-                if v.is_empty() {
-                    Ok(0)
-                } else if let Ok(f) = v.parse::<f64>() {
-                    Ok(f.round() as u64)
-                } else {
-                    Err(E::invalid_value(Unexpected::Str(v), &self))
-                }
-            }
+        if let Ok(n) = v.parse::<u64>() {
+            Ok(n)
+        } else if v.is_empty() {
+            Ok(0)
+        } else if let Ok(f) = v.parse::<f64>() {
+            Ok(f.round() as u64)
+        } else {
+            Err(E::invalid_value(Unexpected::Str(v), &self))
         }
     }
 
@@ -201,17 +199,14 @@ impl<'de> de::Visitor<'de> for DeserializeI64WithVisitor {
     where
         E: de::Error,
     {
-        match v.parse::<i64>() {
-            Ok(s) => Ok(s),
-            Err(_) => {
-                if v.is_empty() {
-                    Ok(0)
-                } else if let Ok(f) = v.parse::<f64>() {
-                    Ok(f.round() as i64)
-                } else {
-                    Err(E::invalid_value(Unexpected::Str(v), &self))
-                }
-            }
+        if let Ok(n) = v.parse::<i64>() {
+            Ok(n)
+        } else if v.is_empty() {
+            Ok(0)
+        } else if let Ok(f) = v.parse::<f64>() {
+            Ok(f.round() as i64)
+        } else {
+            Err(E::invalid_value(Unexpected::Str(v), &self))
         }
     }
 
@@ -259,15 +254,12 @@ impl<'de> de::Visitor<'de> for DeserializeF64WithVisitor {
     where
         E: de::Error,
     {
-        match v.parse::<f64>() {
-            Ok(s) => Ok(s),
-            Err(_) => {
-                if v.is_empty() {
-                    Ok(0.0)
-                } else {
-                    Err(E::invalid_value(Unexpected::Str(v), &self))
-                }
-            }
+        if let Ok(f) = v.parse::<f64>() {
+            Ok(f)
+        } else if v.is_empty() {
+            Ok(0.0)
+        } else {
+            Err(E::invalid_value(Unexpected::Str(v), &self))
         }
     }
 
@@ -339,9 +331,21 @@ impl<'de> de::Visitor<'de> for DeserializeBoolWithVisitor {
     where
         E: de::Error,
     {
-        match v.to_uppercase().as_str() {
-            "1" | "OK" | "T" | "TRUE" | "Y" | "YES" => Ok(true),
-            _ => Ok(false),
+        // First, try to match common true/false phrases *without*
+        // using `to_uppercase()`. This approach is likely more efficient.
+        match v {
+            "t" | "T" | "true" | "True" | "1" => Ok(true),
+            "f" | "F" | "false" | "False" | "0" => Ok(false),
+            other => {
+                // So from the above, we've already matched the following
+                // "truthy" phrases: ["T", "1"].
+                // To be completely thorough, we also need to do a case-
+                // insensitive match on ["OK", "ON", "TRUE", "Y", "YES"].
+                match other.to_uppercase().as_str() {
+                    "OK" | "ON" | "TRUE" | "Y" | "YES" => Ok(true),
+                    _ => Ok(false),
+                }
+            }
         }
     }
 

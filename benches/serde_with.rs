@@ -4,10 +4,10 @@ use serde_with::{serde_as, DisplayFromStr, PickFirst};
 
 use serde_this_or_that::*;
 
-/// `MsgCustom` - uses a custom `Visitor` pattern with `serde`
+/// `MsgSerdeThisOrThat` - uses a custom `Visitor` pattern with `serde`
 #[derive(Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
-pub struct MsgCustom {
+pub struct MsgSerdeThisOrThat {
     #[serde(deserialize_with = "as_bool")]
     pub is_active: bool,
     #[serde(deserialize_with = "as_u64")]
@@ -16,7 +16,20 @@ pub struct MsgCustom {
     pub grade: f64,
 }
 
-/// `MsgWith` - uses a `PickFirst` approach via `serde_with`
+/// `MsgSerdeWithFromStr` - uses a `DisplayFromStr` approach via `serde_with`
+#[serde_as]
+#[derive(Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct MsgSerdeWithFromStr {
+    #[serde_as(as = "DisplayFromStr")]
+    pub is_active: bool,
+    #[serde_as(as = "DisplayFromStr")]
+    pub num_attempts: u64,
+    #[serde_as(as = "DisplayFromStr")]
+    pub grade: f64,
+}
+
+/// `MsgSerdeWithPickFirst` - uses a `PickFirst` approach via `serde_with`
 ///
 /// # Note
 /// Use `PickFirst` instead of just `DisplayFromStr`, so we can handle
@@ -25,7 +38,7 @@ pub struct MsgCustom {
 #[serde_as]
 #[derive(Deserialize)]
 #[serde(rename_all = "camelCase")]
-pub struct MsgWith {
+pub struct MsgSerdeWithPickFirst {
     #[serde_as(as = "PickFirst<(_, DisplayFromStr)>")]
     pub is_active: bool,
     #[serde_as(as = "PickFirst<(_, DisplayFromStr)>")]
@@ -42,11 +55,11 @@ fn criterion_benchmark(c: &mut Criterion) {
         "grade": 81
     }"#;
 
-    c.bench_function("de custom", |b| {
-        b.iter(|| from_str::<MsgCustom>(black_box(data)).unwrap())
+    c.bench_function("de: serde_this_or_that   ", |b| {
+        b.iter(|| from_str::<MsgSerdeThisOrThat>(black_box(data)).unwrap())
     });
-    c.bench_function("de serde_with", |b| {
-        b.iter(|| from_str::<MsgWith>(black_box(data)).unwrap())
+    c.bench_function("de: serde_with::PickFirst", |b| {
+        b.iter(|| from_str::<MsgSerdeWithPickFirst>(black_box(data)).unwrap())
     });
 
     let data = r#"
@@ -56,11 +69,14 @@ fn criterion_benchmark(c: &mut Criterion) {
         "grade": "78.0"
     }"#;
 
-    c.bench_function("de custom (input: str)", |b| {
-        b.iter(|| from_str::<MsgCustom>(black_box(data)).unwrap())
+    c.bench_function("de: serde_this_or_that         (input: str)", |b| {
+        b.iter(|| from_str::<MsgSerdeThisOrThat>(black_box(data)).unwrap())
     });
-    c.bench_function("de serde_with (input: str)", |b| {
-        b.iter(|| from_str::<MsgWith>(black_box(data)).unwrap())
+    c.bench_function("de: serde_with::PickFirst      (input: str)", |b| {
+        b.iter(|| from_str::<MsgSerdeWithPickFirst>(black_box(data)).unwrap())
+    });
+    c.bench_function("de serde_with::DisplayFromStr  (input: str)", |b| {
+        b.iter(|| from_str::<MsgSerdeWithFromStr>(black_box(data)).unwrap())
     });
 }
 

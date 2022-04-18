@@ -91,7 +91,7 @@ folder, and can be run with `cargo bench`.
 [`Visitor`]: https://docs.serde.rs/serde/de/trait.Visitor.html
 [untagged enum]: https://stackoverflow.com/a/66961340/10237506
 [serde_with]: https://docs.rs/serde_with
-[`DisplayFromStr`]: https://docs.rs/serde_with/1.12.1/serde_with/struct.DisplayFromStr.html
+[`DisplayFromStr`]: https://docs.rs/serde_with/latest/serde_with/struct.DisplayFromStr.html
 [`PickFirst`]: https://docs.rs/serde_with/latest/serde_with/struct.PickFirst.html
 
 ## Contributing

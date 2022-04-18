@@ -60,13 +60,24 @@
 //! ## Performance
 //!
 //! The benchmarks suggest that implementing a custom
-//! `Visitor` as `serde-this-or-that` does, performs
-//! on average **about 10x better** than an approach with an [untagged enum].
+//! [`Visitor`] as `serde-this-or-that` does, performs
+//! on average **about 15x better** than an approach with an [untagged enum].
+//!
+//! A separate benchmark compares performance against the [serde_with] crate:
+//! it indicates both crates perform about the same,
+//! assuming only [`DisplayFromStr`] is used.
+//! But when [`PickFirst`] is involved, `serde_this_or_that` appears to
+//! perform **about 12x better** in an average case.
 //!
 //! The benchmarks live in the [benches/](https://github.com/rnag/serde-this-or-that/tree/main/benches)
 //! folder, and can be run with `cargo bench`.
 //!
+//! [`Visitor`]: https://docs.serde.rs/serde/de/trait.Visitor.html
 //! [untagged enum]: https://stackoverflow.com/a/66961340/10237506
+//! [serde_with]: https://docs.rs/serde_with
+//! [`DisplayFromStr`]: https://docs.rs/serde_with/latest/serde_with/struct.DisplayFromStr.html
+//! [`PickFirst`]: https://docs.rs/serde_with/latest/serde_with/struct.PickFirst.html
+//!
 //!
 //! ## Readme Docs
 //!

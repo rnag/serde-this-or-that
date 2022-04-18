@@ -58,13 +58,13 @@ fn criterion_benchmark(c: &mut Criterion) {
         "timestamp": 12345
     }"#;
 
-    c.bench_function("de custom (input: u64)", |b| {
+    c.bench_function("de: custom      (input: u64)", |b| {
         b.iter(|| from_str::<MsgCustom>(black_box(data)).unwrap())
     });
-    c.bench_function("de untagged (input: u64)", |b| {
+    c.bench_function("de: untagged    (input: u64)", |b| {
         b.iter(|| from_str::<MsgUntagged>(black_box(data)).unwrap())
     });
-    c.bench_function("de serde_with (input: u64)", |b| {
+    c.bench_function("de: serde_with  (input: u64)", |b| {
         b.iter(|| from_str::<MsgWith>(black_box(data)).unwrap())
     });
 
@@ -73,10 +73,10 @@ fn criterion_benchmark(c: &mut Criterion) {
         "timestamp": ""
     }"#;
 
-    c.bench_function("de custom (input: str <empty>)", |b| {
+    c.bench_function("de: custom    (input: str <empty>)", |b| {
         b.iter(|| from_str::<MsgCustom>(black_box(data)).unwrap())
     });
-    c.bench_function("de untagged (input: str <empty>)", |b| {
+    c.bench_function("de: untagged  (input: str <empty>)", |b| {
         b.iter(|| from_str::<MsgUntagged>(black_box(data)).unwrap())
     });
     // TODO It looks like `serde_with` chokes at empty string values
@@ -90,13 +90,13 @@ fn criterion_benchmark(c: &mut Criterion) {
         "timestamp": "1650057633185497"
     }"#;
 
-    c.bench_function("de custom (input: str)", |b| {
+    c.bench_function("de: custom      (input: str)", |b| {
         b.iter(|| from_str::<MsgCustom>(black_box(data)).unwrap())
     });
-    c.bench_function("de untagged (input: str)", |b| {
+    c.bench_function("de: untagged    (input: str)", |b| {
         b.iter(|| from_str::<MsgUntagged>(black_box(data)).unwrap())
     });
-    c.bench_function("de serde_with (input: str)", |b| {
+    c.bench_function("de: serde_with  (input: str)", |b| {
         b.iter(|| from_str::<MsgWith>(black_box(data)).unwrap())
     });
 
@@ -105,15 +105,15 @@ fn criterion_benchmark(c: &mut Criterion) {
         "timestamp": 123.45
     }"#;
 
-    c.bench_function("de custom (input: f64)", |b| {
+    c.bench_function("de: custom    (input: f64)", |b| {
         b.iter(|| from_str::<MsgCustom>(black_box(data)).unwrap())
     });
-    c.bench_function("de untagged (input: f64)", |b| {
+    c.bench_function("de: untagged  (input: f64)", |b| {
         b.iter(|| from_str::<MsgUntagged>(black_box(data)).unwrap())
     });
     // TODO I think `serde_with` doesn't support de-serializing `float`
     //   values to a `u64` currently.
-    // c.bench_function("de serde_with (input: f64)", |b| {
+    // c.bench_function("de: serde_with (input: f64)", |b| {
     //     b.iter(|| from_str::<MsgWith>(black_box(data)).unwrap())
     // });
 }

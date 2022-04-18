@@ -45,14 +45,25 @@ where
 {
     match MyCustomType::deserialize(deserializer)? {
         MyCustomType::Bool(v) => Ok(v),
-        MyCustomType::Str(v) => match v.to_uppercase().as_str() {
-            "1" | "OK" | "T" | "TRUE" | "Y" | "YES" => Ok(true),
-            _ => Ok(false),
-        },
+        MyCustomType::Str(v) => str_to_bool(v),
         MyCustomType::U64(v) => match v {
             1 => Ok(true),
             0 => Ok(false),
             _ => Err(de::Error::custom("invalid value, need a zero or one")),
+        },
+    }
+}
+
+/// Note: this is essentially the same logic that the `as_bool` helper
+/// function uses to convert `str` values to `bool`.
+#[inline]
+pub(crate) fn str_to_bool<E>(v: &str) -> Result<bool, E> {
+    match v {
+        "t" | "T" | "true" | "True" | "1" => Ok(true),
+        "f" | "F" | "false" | "False" | "0" => Ok(false),
+        other => match other.to_uppercase().as_str() {
+            "OK" | "ON" | "TRUE" | "Y" | "YES" => Ok(true),
+            _ => Ok(false),
         },
     }
 }
@@ -63,13 +74,13 @@ fn criterion_benchmark(c: &mut Criterion) {
         "is_active": false
     }"#;
 
-    c.bench_function("de custom (input: bool)", |b| {
+    c.bench_function("de: custom      (input: bool)", |b| {
         b.iter(|| from_str::<MsgCustom>(black_box(data)).unwrap())
     });
-    c.bench_function("de untagged (input: bool)", |b| {
+    c.bench_function("de: untagged    (input: bool)", |b| {
         b.iter(|| from_str::<MsgUntagged>(black_box(data)).unwrap())
     });
-    c.bench_function("de serde_with (input: bool)", |b| {
+    c.bench_function("de: serde_with  (input: bool)", |b| {
         b.iter(|| from_str::<MsgWith>(black_box(data)).unwrap())
     });
 
@@ -78,13 +89,13 @@ fn criterion_benchmark(c: &mut Criterion) {
         "is_active": "true"
     }"#;
 
-    c.bench_function("de custom (input: str)", |b| {
+    c.bench_function("de: custom      (input: str)", |b| {
         b.iter(|| from_str::<MsgCustom>(black_box(data)).unwrap())
     });
-    c.bench_function("de untagged (input: str)", |b| {
+    c.bench_function("de: untagged    (input: str)", |b| {
         b.iter(|| from_str::<MsgUntagged>(black_box(data)).unwrap())
     });
-    c.bench_function("de serde_with (input: str)", |b| {
+    c.bench_function("de: serde_with  (input: str)", |b| {
         b.iter(|| from_str::<MsgWith>(black_box(data)).unwrap())
     });
 
@@ -93,15 +104,15 @@ fn criterion_benchmark(c: &mut Criterion) {
         "is_active": 1
     }"#;
 
-    c.bench_function("de custom (input: u64)", |b| {
+    c.bench_function("de: custom    (input: u64)", |b| {
         b.iter(|| from_str::<MsgCustom>(black_box(data)).unwrap())
     });
-    c.bench_function("de untagged (input: u64)", |b| {
+    c.bench_function("de: untagged  (input: u64)", |b| {
         b.iter(|| from_str::<MsgUntagged>(black_box(data)).unwrap())
     });
     // TODO: I think `serde_with` doesn't support converting `u64` (zero
     //   or one) to a `bool` currently.
-    // c.bench_function("de serde_with (input: u64)", |b| {
+    // c.bench_function("de: serde_with (input: u64)", |b| {
     //     b.iter(|| from_str::<MsgWith>(black_box(data)).unwrap())
     // });
 }

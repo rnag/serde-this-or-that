@@ -1,6 +1,6 @@
 [package]
 name = "serde-this-or-that"
-version = "0.3.1"
+version = "0.4.0"
 authors = ["Ritvik Nag <rv.kvetch@gmail.com>"]
 description = "Custom deserialization for fields that can be specified as multiple types."
 documentation = "https://docs.rs/serde-this-or-that"
@@ -77,3 +77,8 @@ path = "benches/as_u64.rs"
 name = "as_bool"
 harness = false
 path = "benches/as_bool.rs"
+
+[[bench]]
+name = "serde_with"
+harness = false
+path = "benches/serde_with.rs"

@@ -17,6 +17,12 @@ Possible header types:
   - `other_method()`
 -->
 
+## v0.4.1 (2023-02-05)
+
+### Bug Fixes
+
+* Fix readme badge, as per [badges/shields#8671](https://github.com/badges/shields/issues/8671).
+
 ## v0.4.0 (2022-04-18)
 
 ### Features

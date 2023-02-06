@@ -1,6 +1,6 @@
 [package]
 name = "serde-this-or-that"
-version = "0.4.1"
+version = "0.4.2"
 authors = ["Ritvik Nag <rv.kvetch@gmail.com>"]
 description = "Custom deserialization for fields that can be specified as multiple types."
 documentation = "https://docs.rs/serde-this-or-that"

@@ -89,8 +89,10 @@
 //!
 
 mod de_impl;
+mod de_impl_opt;
 
 pub use de_impl::{as_bool, as_f64, as_i64, as_string, as_u64};
+pub use de_impl_opt::{as_opt_bool, as_opt_f64, as_opt_i64, as_opt_string, as_opt_u64};
 #[doc(hidden)]
 pub use serde;
 #[doc(hidden)]

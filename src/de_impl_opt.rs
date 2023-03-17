@@ -113,12 +113,7 @@ impl<'de> de::Visitor<'de> for DeserializeOptionalU64WithVisitor {
     where
         E: de::Error,
     {
-        match u64::try_from(v) {
-            Ok(v) => Ok(Some(v)),
-            Err(_) => Err(E::custom(format!(
-                "overflow: Unable to convert signed value `{v:?}` to u64"
-            ))),
-        }
+        Ok(u64::try_from(v).ok())
     }
 
     fn visit_u64<E>(self, v: u64) -> Result<Self::Value, E>
@@ -180,12 +175,7 @@ impl<'de> de::Visitor<'de> for DeserializeOptionalI64WithVisitor {
     where
         E: de::Error,
     {
-        match i64::try_from(v) {
-            Ok(v) => Ok(Some(v)),
-            Err(_) => Err(E::custom(format!(
-                "overflow: Unable to convert unsigned value `{v:?}` to i64"
-            ))),
-        }
+        Ok(i64::try_from(v).ok())
     }
 
     fn visit_f64<E>(self, v: f64) -> Result<Self::Value, E>

@@ -104,6 +104,16 @@ folder, and can be run with `cargo bench`.
 [`DisplayFromStr`]: https://docs.rs/serde_with/latest/serde_with/struct.DisplayFromStr.html
 [`PickFirst`]: https://docs.rs/serde_with/latest/serde_with/struct.PickFirst.html
 
+## Optionals
+
+The extra helper functions that begin with `as_opt`, return an `Option<T>` of the respective data type `T`,
+rather than the type `T` itself (see [#4](https://github.com/rnag/serde-this-or-that/issues/4)).
+
+On success, they return a value of `T` wrapped in [`Some`](https://doc.rust-lang.org/std/option/enum.Option.html#variant.Some).
+
+On error, or when there is a `null` value, or one of an *invalid* data type, the
+`as_opt` helper functions return [`None`](https://doc.rust-lang.org/std/option/enum.Option.html#variant.None) instead.
+
 ## Contributing
 
 Contributions are welcome! Open a pull request to fix a bug, or [open an issue][]

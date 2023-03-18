@@ -5,12 +5,12 @@
 extern crate log;
 
 use serde::Deserialize;
-use serde_this_or_that::as_opt_bool;
+use serde_this_or_that::as_opt_i64;
 
 #[derive(Clone, Debug, Deserialize)]
 pub struct Msg {
-    #[serde(deserialize_with = "as_opt_bool")]
-    pub timestamp: Option<bool>,
+    #[serde(deserialize_with = "as_opt_i64")]
+    pub timestamp: Option<i64>,
 }
 
 // A simple type alias so as to DRY.
@@ -39,77 +39,6 @@ fn main() -> Result<()> {
     assert_eq!(m.timestamp, None);
     trace!("  {m:?}");
 
-    trace!("With Zero (0):");
-    let data = r#"
-    {
-        "timestamp": 0
-    }"#;
-
-    let m: Msg = serde_json::from_str(data).unwrap();
-
-    trace!("  {m:?}");
-    assert_eq!(m.timestamp, Some(false));
-
-    trace!("With One (1):");
-
-    let data = r#"
-    {
-        "timestamp": 1
-    }"#;
-
-    let m: Msg = serde_json::from_str(data).unwrap();
-
-    trace!("  {m:?}");
-    assert_eq!(m.timestamp, Some(true));
-
-    trace!("With String (truthy #1):");
-
-    let data = r#"
-    {
-        "timestamp": "tRuE"
-    }"#;
-
-    let m: Msg = serde_json::from_str(data).unwrap();
-
-    trace!("  {m:?}");
-    assert_eq!(m.timestamp, Some(true));
-
-    trace!("With String (truthy #2):");
-
-    let data = r#"
-    {
-        "timestamp": "Y"
-    }"#;
-
-    let m: Msg = serde_json::from_str(data).unwrap();
-
-    trace!("  {m:?}");
-    assert_eq!(m.timestamp, Some(true));
-
-    trace!("With String (falsy):");
-
-    let data = r#"
-    {
-        "timestamp": "nope!"
-    }"#;
-
-    let m: Msg = serde_json::from_str(data).unwrap();
-
-    trace!("  {m:?}");
-    assert_eq!(m.timestamp, Some(false));
-
-    trace!("With String (Invalid Numeric):");
-
-    let data = r#"
-    {
-        "timestamp": "123456789076543210"
-    }"#;
-
-    let m: Msg = serde_json::from_str(data).unwrap();
-
-    trace!("  {m:?}");
-    assert_eq!(m.timestamp, Some(false));
-
     trace!("With U64:");
 
     let data = r#"
@@ -117,18 +46,45 @@ fn main() -> Result<()> {
         "timestamp": 123456789076543210
     }"#;
 
-    if matches!(serde_json::from_str::<Msg>(data), Ok(m) if m.timestamp.is_none()) {
-        trace!("  None");
-    } else {
-        error!("  ERROR! no error should have occurred.");
-        assert_eq!(0, 1, "failure!");
-    };
+    let m: Msg = serde_json::from_str(data).unwrap();
+    trace!("  {m:?}");
+
+    trace!("With String:");
+
+    let data = r#"
+    {
+        "timestamp": "123456789076543210"
+    }"#;
+
+    let m: Msg = serde_json::from_str(data).unwrap();
+    trace!("  {m:?}");
 
     trace!("With I64:");
 
     let data = r#"
     {
-        "timestamp": -123
+        "timestamp": -123456789076543210
+    }"#;
+
+    let m: Msg = serde_json::from_str(data).unwrap();
+    trace!("  {m:?}");
+
+    trace!("With F64:");
+
+    let data = r#"
+    {
+        "timestamp": -0.5
+    }"#;
+
+    let m: Msg = serde_json::from_str(data).unwrap();
+    trace!("  {m:?}");
+    assert_eq!(m.timestamp, Some(-1));
+
+    trace!("With U64 (Larger):");
+
+    let data = r#"
+    {
+        "timestamp": 12345678907654321000
     }"#;
 
     if matches!(serde_json::from_str::<Msg>(data), Ok(m) if m.timestamp.is_none()) {

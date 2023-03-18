@@ -29,6 +29,16 @@ fn main() -> Result<()> {
     assert_eq!(m.timestamp, None);
     trace!("  {m:?}");
 
+    trace!("With Boolean:");
+    let data = r#"
+    {
+        "timestamp": true
+    }"#;
+
+    let m: Msg = serde_json::from_str(data).unwrap();
+    assert_eq!(m.timestamp, None);
+    trace!("  {m:?}");
+
     trace!("With Null:  ");
     let data = r#"
     {

@@ -26,6 +26,16 @@ fn main() -> Result<()> {
     }"#;
 
     let m: Msg = serde_json::from_str(data).unwrap();
+    assert_eq!(m.timestamp, Some(false));
+    trace!("  {m:?}");
+
+    trace!("With I64:");
+    let data = r#"
+    {
+        "timestamp": -123
+    }"#;
+
+    let m: Msg = serde_json::from_str(data).unwrap();
     assert_eq!(m.timestamp, None);
     trace!("  {m:?}");
 

@@ -76,7 +76,7 @@ where
 /// a *zero* or a *one*.
 ///
 /// # Returns
-/// The boolean (`bool`) value of a string or number.
+/// The boolean (`bool`) value of a string, boolean, or number.
 ///
 pub fn as_bool<'de, D>(deserializer: D) -> Result<bool, D::Error>
 where

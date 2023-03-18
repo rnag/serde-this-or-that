@@ -2,8 +2,9 @@ use std::{f64, fmt};
 
 use crate::de::{self, Deserializer};
 
-/// De-serialize either a `null`, `str`, `i64`, `f64`, or `u64`
-/// as a *signed* value.
+/// De-serialize either a `str`, `i64`, `f64`, or `u64`
+/// as a *signed* value wrapped in [`Some`],
+/// and a `bool` or `null` value as [`None`].
 ///
 /// # Errors
 /// Returns an error if a string is non-empty and not a valid numeric
@@ -11,7 +12,13 @@ use crate::de::{self, Deserializer};
 /// to `i64`.
 ///
 /// # Returns
-/// The signed (`i64`) value of a string or number.
+/// A [`Some`] with the signed (`i64`) value of a string
+/// or number.
+///
+/// A [`None`] in the case of:
+///   * a `bool` value.
+///   * a `null` value.
+///   * any *de-serialization* errors.
 ///
 pub fn as_opt_i64<'de, D>(deserializer: D) -> Result<Option<i64>, D::Error>
 where
@@ -20,15 +27,22 @@ where
     deserializer.deserialize_any(DeserializeOptionalI64WithVisitor)
 }
 
-/// De-serialize either a `null`, `str`, `u64`, `f64`, or `i64`
-/// as an *unsigned* value.
+/// De-serialize either a `str`, `u64`, `f64`, or `i64`
+/// as an *unsigned* value wrapped in [`Some`],
+/// and a `bool` or `null` value as [`None`].
 ///
 /// # Errors
 /// Returns an error if a string is non-empty and not a valid numeric
 /// value, or if the signed value `i64` represents a *negative* number.
 ///
 /// # Returns
-/// The unsigned (`u64`) value of a string or number.
+/// A [`Some`] with the unsigned (`u64`) value of a string
+/// or number.
+///
+/// A [`None`] in the case of:
+///   * a `bool` value.
+///   * a `null` value.
+///   * any *de-serialization* errors.
 ///
 pub fn as_opt_u64<'de, D>(deserializer: D) -> Result<Option<u64>, D::Error>
 where
@@ -37,14 +51,21 @@ where
     deserializer.deserialize_any(DeserializeOptionalU64WithVisitor)
 }
 
-/// De-serialize either a `null`, `str`, `f64`, `u64`, or `i64`
-/// as a *float* value.
+/// De-serialize either a `str`, `f64`, `u64`, or `i64`
+/// as a *float* value wrapped in [`Some`],
+/// and a `bool` or `null` value as [`None`].
 ///
 /// # Errors
 /// Returns an error if a string is non-empty and not a valid numeric value.
 ///
 /// # Returns
-/// The floating point (`f64`) value of a string or number.
+/// A [`Some`] with the floating point (`f64`) value of a string
+/// or number.
+///
+/// A [`None`] in the case of:
+///   * a `bool` value.
+///   * a `null` value.
+///   * any *de-serialization* errors.
 ///
 pub fn as_opt_f64<'de, D>(deserializer: D) -> Result<Option<f64>, D::Error>
 where
@@ -53,8 +74,9 @@ where
     deserializer.deserialize_any(DeserializeOptionalF64WithVisitor)
 }
 
-/// De-serialize either a `null`, `bool`, `str`, `u64`, or `f64`
-/// as a *boolean* value.
+/// De-serialize either a `bool`, `str`, `u64`, or `f64`
+/// as a *boolean* value wrapped in [`Some`],
+/// and an `i64` or `null` value as [`None`].
 ///
 /// # Truthy String Values
 /// > Note: the pattern matching is *case insensitive*, so `YES` or `yes`
@@ -76,7 +98,13 @@ where
 /// a *zero* or a *one*.
 ///
 /// # Returns
-/// The boolean (`bool`) value of a string or number.
+/// A [`Some`] with the boolean (`bool`) value of a string,
+/// boolean, or number.
+///
+/// A [`None`] in the case of:
+///   * an `i64` value.
+///   * a `null` value.
+///   * any *de-serialization* errors.
 ///
 pub fn as_opt_bool<'de, D>(deserializer: D) -> Result<Option<bool>, D::Error>
 where
@@ -85,11 +113,18 @@ where
     deserializer.deserialize_any(DeserializeOptionalBoolWithVisitor)
 }
 
-/// De-serialize either a `null`, `str`, `bool`, `i64`, `f64`, or `u64`
-/// as an (owned) *string* value.
+/// De-serialize either a `str`, `bool`, `i64`, `f64`, or `u64`
+/// as an (owned) *string* value wrapped in [`Some`],
+/// and an empty string or `null` value as [`None`].
 ///
 /// # Returns
-/// The owned `String` value of a string, boolean, or number.
+/// A [`Some`] with the owned `String` value of a string,
+/// boolean, or number.
+///
+/// A [`None`] in the case of:
+///   * a `null` value.
+///   * an empty string.
+///   * any *de-serialization* errors.
 ///
 pub fn as_opt_string<'de, D>(deserializer: D) -> Result<Option<String>, D::Error>
 where
@@ -107,6 +142,13 @@ impl<'de> de::Visitor<'de> for DeserializeOptionalU64WithVisitor {
 
     fn expecting(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
         formatter.write_str("an unsigned integer or a string")
+    }
+
+    fn visit_bool<E>(self, _: bool) -> Result<Self::Value, E>
+    where
+        E: de::Error,
+    {
+        Ok(None)
     }
 
     fn visit_i64<E>(self, v: i64) -> Result<Self::Value, E>
@@ -164,6 +206,13 @@ impl<'de> de::Visitor<'de> for DeserializeOptionalI64WithVisitor {
         formatter.write_str("a signed integer or a string")
     }
 
+    fn visit_bool<E>(self, _: bool) -> Result<Self::Value, E>
+    where
+        E: de::Error,
+    {
+        Ok(None)
+    }
+
     fn visit_i64<E>(self, v: i64) -> Result<Self::Value, E>
     where
         E: de::Error,
@@ -217,6 +266,13 @@ impl<'de> de::Visitor<'de> for DeserializeOptionalF64WithVisitor {
 
     fn expecting(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
         formatter.write_str("a float or a string")
+    }
+
+    fn visit_bool<E>(self, _: bool) -> Result<Self::Value, E>
+    where
+        E: de::Error,
+    {
+        Ok(None)
     }
 
     fn visit_i64<E>(self, v: i64) -> Result<Self::Value, E>
@@ -312,7 +368,6 @@ impl<'de> de::Visitor<'de> for DeserializeOptionalBoolWithVisitor {
         // First, try to match common true/false phrases *without*
         // using `to_uppercase()`. This approach is likely more efficient.
         match v {
-            "" => Ok(None),
             "t" | "T" | "true" | "True" | "1" => Ok(Some(true)),
             "f" | "F" | "false" | "False" | "0" => Ok(Some(false)),
             other => {

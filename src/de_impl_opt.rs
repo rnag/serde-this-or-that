@@ -6,11 +6,6 @@ use crate::de::{self, Deserializer};
 /// as a *signed* value wrapped in [`Some`],
 /// and a `bool` or `null` value as [`None`].
 ///
-/// # Errors
-/// Returns an error if a string is non-empty and not a valid numeric
-/// value, or if the unsigned value `u64` *overflows* when converted
-/// to `i64`.
-///
 /// # Returns
 /// A [`Some`] with the signed (`i64`) value of a string
 /// or number.
@@ -19,6 +14,8 @@ use crate::de::{self, Deserializer};
 ///   * a `bool` value.
 ///   * a `null` value.
 ///   * any *de-serialization* errors.
+///     * ex. a string is non-empty and not a valid numeric value.
+///     * ex. the unsigned value `u64` *overflows* when converted to `i64`.
 ///
 pub fn as_opt_i64<'de, D>(deserializer: D) -> Result<Option<i64>, D::Error>
 where
@@ -31,10 +28,6 @@ where
 /// as an *unsigned* value wrapped in [`Some`],
 /// and a `bool` or `null` value as [`None`].
 ///
-/// # Errors
-/// Returns an error if a string is non-empty and not a valid numeric
-/// value, or if the signed value `i64` represents a *negative* number.
-///
 /// # Returns
 /// A [`Some`] with the unsigned (`u64`) value of a string
 /// or number.
@@ -43,6 +36,8 @@ where
 ///   * a `bool` value.
 ///   * a `null` value.
 ///   * any *de-serialization* errors.
+///     * ex. a string is non-empty and not a valid numeric value.
+///     * ex. the signed value `i64` represents a *negative* number.
 ///
 pub fn as_opt_u64<'de, D>(deserializer: D) -> Result<Option<u64>, D::Error>
 where
@@ -55,9 +50,6 @@ where
 /// as a *float* value wrapped in [`Some`],
 /// and a `bool` or `null` value as [`None`].
 ///
-/// # Errors
-/// Returns an error if a string is non-empty and not a valid numeric value.
-///
 /// # Returns
 /// A [`Some`] with the floating point (`f64`) value of a string
 /// or number.
@@ -66,6 +58,7 @@ where
 ///   * a `bool` value.
 ///   * a `null` value.
 ///   * any *de-serialization* errors.
+///     * ex. a string is non-empty and not a valid numeric value.
 ///
 pub fn as_opt_f64<'de, D>(deserializer: D) -> Result<Option<f64>, D::Error>
 where
@@ -93,10 +86,6 @@ where
 ///   - `Y`
 ///   - `YES`
 ///
-/// # Errors
-/// Returns an error if an unsigned `u64` or a float `f64` value is not
-/// a *zero* or a *one*.
-///
 /// # Returns
 /// A [`Some`] with the boolean (`bool`) value of a string,
 /// boolean, or number.
@@ -105,6 +94,7 @@ where
 ///   * an `i64` value.
 ///   * a `null` value.
 ///   * any *de-serialization* errors.
+///     * ex. an unsigned `u64` or a float `f64` value is not a *zero* or a *one*.
 ///
 pub fn as_opt_bool<'de, D>(deserializer: D) -> Result<Option<bool>, D::Error>
 where

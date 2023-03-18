@@ -19,7 +19,7 @@
 //! ```rust
 //! use serde::Deserialize;
 //! use serde_json::from_str;
-//! use serde_this_or_that::{as_bool, as_f64, as_u64};
+//! use serde_this_or_that::{as_bool, as_f64, as_opt_i64, as_u64};
 //!
 //! #[derive(Deserialize, Debug)]
 //! #[serde(rename_all = "camelCase")]
@@ -30,6 +30,9 @@
 //!     num_attempts: u64,
 //!     #[serde(deserialize_with = "as_f64")]
 //!     grade: f64,
+//!     // uses #[serde(default)] in case the field is missing in JSON
+//!     #[serde(default, deserialize_with = "as_opt_i64")]
+//!     confidence: Option<i64>,
 //! }
 //!
 //! fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -37,7 +40,8 @@
 //!     {
 //!         "isActive": "True",
 //!         "numAttempts": "",
-//!         "grade": "81"
+//!         "grade": "81",
+//!         "confidence": "A+"
 //!     }
 //!     "#;
 //!
@@ -47,6 +51,7 @@
 //!     assert!(s.is_active);
 //!     assert_eq!(s.num_attempts, 0);
 //!     assert_eq!(s.grade, 81.0);
+//!     assert_eq!(s.confidence, None);
 //!
 //!     Ok(())
 //! }

@@ -67,16 +67,11 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
 ## Exported Functions
 
-- [`as_bool`](https://docs.rs/serde-this-or-that/latest/serde_this_or_that/fn.as_bool.html)
-- [`as_f64`](https://docs.rs/serde-this-or-that/latest/serde_this_or_that/fn.as_f64.html)
-- [`as_i64`](https://docs.rs/serde-this-or-that/latest/serde_this_or_that/fn.as_i64.html)
-- [`as_string`](https://docs.rs/serde-this-or-that/latest/serde_this_or_that/fn.as_string.html)
-- [`as_u64`](https://docs.rs/serde-this-or-that/latest/serde_this_or_that/fn.as_u64.html)
-- [`as_opt_bool`](https://docs.rs/serde-this-or-that/latest/serde_this_or_that/fn.as_opt_bool.html)
-- [`as_opt_f64`](https://docs.rs/serde-this-or-that/latest/serde_this_or_that/fn.as_opt_f64.html)
-- [`as_opt_i64`](https://docs.rs/serde-this-or-that/latest/serde_this_or_that/fn.as_opt_i64.html)
-- [`as_opt_string`](https://docs.rs/serde-this-or-that/latest/serde_this_or_that/fn.as_opt_string.html)
-- [`as_opt_u64`](https://docs.rs/serde-this-or-that/latest/serde_this_or_that/fn.as_opt_u64.html)
+- [`as_bool`](https://docs.rs/serde-this-or-that/latest/serde_this_or_that/fn.as_bool.html) / [`as_opt_bool`](https://docs.rs/serde-this-or-that/latest/serde_this_or_that/fn.as_opt_bool.html)
+- [`as_f64`](https://docs.rs/serde-this-or-that/latest/serde_this_or_that/fn.as_f64.html) / [`as_opt_f64`](https://docs.rs/serde-this-or-that/latest/serde_this_or_that/fn.as_opt_f64.html)
+- [`as_i64`](https://docs.rs/serde-this-or-that/latest/serde_this_or_that/fn.as_i64.html) / [`as_opt_i64`](https://docs.rs/serde-this-or-that/latest/serde_this_or_that/fn.as_opt_i64.html)
+- [`as_string`](https://docs.rs/serde-this-or-that/latest/serde_this_or_that/fn.as_string.html) / [`as_opt_string`](https://docs.rs/serde-this-or-that/latest/serde_this_or_that/fn.as_opt_string.html)
+- [`as_u64`](https://docs.rs/serde-this-or-that/latest/serde_this_or_that/fn.as_u64.html) / [`as_opt_u64`](https://docs.rs/serde-this-or-that/latest/serde_this_or_that/fn.as_opt_u64.html) 
 
 ## Examples
 

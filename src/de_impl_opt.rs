@@ -38,6 +38,7 @@ where
 ///   * any *de-serialization* errors.
 ///     * ex. a string is non-empty and not a valid numeric value.
 ///     * ex. the signed value `i64` represents a *negative* number.
+///     * ex. float `f64` represents a *negative* number `< -0.5`, or `NaN`.
 ///
 pub fn as_opt_u64<'de, D>(deserializer: D) -> Result<Option<u64>, D::Error>
 where

@@ -87,11 +87,28 @@ where
 ///   - `Y`
 ///   - `YES`
 ///
+/// # Falsy String Values
+/// > Note: the pattern matching is *case insensitive*, so `NO` or `no`
+/// > works just the same.
+///
+/// These are the following "falsy" string values that result in a
+/// boolean value of `false`:
+///
+///   - `0`
+///   - `NG` ([antonym for `OK`](https://english.stackexchange.com/a/586568/461000))
+///   - `OFF`
+///   - `F`
+///   - `FALSE`
+///   - `N`
+///   - `NO`
+///
 /// # Returns
 /// A [`Some`] with the boolean (`bool`) value of a string,
 /// boolean, or number.
 ///
 /// A [`None`] in the case of:
+///   * a `str` value which does not match any of the ["truthy"](#truthy-string-values)
+///     or ["falsy"](#falsy-string-values) values as defined above.
 ///   * an `i64` value.
 ///   * a `null` value.
 ///   * any *de-serialization* errors.
@@ -363,12 +380,15 @@ impl<'de> de::Visitor<'de> for DeserializeOptionalBoolWithVisitor {
             "f" | "F" | "false" | "False" | "0" => Ok(Some(false)),
             other => {
                 // So from the above, we've already matched the following
-                // "truthy" phrases: ["T", "1"].
+                // "truthy" phrases: ["T", "1"]
+                // and the following "falsy" phrases: ["F", "0"].
                 // To be completely thorough, we also need to do a case-
-                // insensitive match on ["OK", "ON", "TRUE", "Y", "YES"].
+                // insensitive match on ["OK", "ON", "TRUE", "Y", "YES"]
+                // and its counterpart, ["NG", "OFF", "FALSE", "N", "NO"].
                 match other.to_uppercase().as_str() {
                     "OK" | "ON" | "TRUE" | "Y" | "YES" => Ok(Some(true)),
-                    _ => Ok(Some(false)),
+                    "NG" | "OFF" | "FALSE" | "N" | "NO" => Ok(Some(false)),
+                    _ => Ok(None),
                 }
             }
         }

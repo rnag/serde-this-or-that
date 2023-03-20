@@ -26,7 +26,7 @@ fn main() -> Result<()> {
     }"#;
 
     let m: Msg = serde_json::from_str(data).unwrap();
-    assert_eq!(m.archived, Some(false));
+    assert_eq!(m.archived, None);
     trace!("  {m:?}");
 
     trace!("With I64:");
@@ -100,13 +100,25 @@ fn main() -> Result<()> {
 
     let data = r#"
     {
-        "archived": "nope!"
+        "archived": "ng"
     }"#;
 
     let m: Msg = serde_json::from_str(data).unwrap();
 
     trace!("  {m:?}");
     assert_eq!(m.archived, Some(false));
+
+    trace!("With String (Invalid):");
+
+    let data = r#"
+    {
+        "archived": "nope!"
+    }"#;
+
+    let m: Msg = serde_json::from_str(data).unwrap();
+
+    trace!("  {m:?}");
+    assert_eq!(m.archived, None);
 
     trace!("With String (Invalid Numeric):");
 
@@ -118,7 +130,7 @@ fn main() -> Result<()> {
     let m: Msg = serde_json::from_str(data).unwrap();
 
     trace!("  {m:?}");
-    assert_eq!(m.archived, Some(false));
+    assert_eq!(m.archived, None);
 
     trace!("With U64:");
 

@@ -424,11 +424,7 @@ impl<'de> de::Visitor<'de> for DeserializeOptionalStringWithVisitor {
     where
         E: de::Error,
     {
-        if v.is_empty() {
-            Ok(None)
-        } else {
-            Ok(Some(v.to_owned()))
-        }
+        Ok(Some(v.to_owned()))
     }
 
     /// We encounter a `null` value; this default implementation returns an

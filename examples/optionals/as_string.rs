@@ -26,7 +26,7 @@ fn main() -> Result<()> {
     }"#;
 
     let m: Msg = serde_json::from_str(data).unwrap();
-    assert_eq!(m.timestamp, None);
+    assert_eq!(m.timestamp, Some("".into()));
     trace!("  {m:?}");
 
     trace!("With Null:  ");

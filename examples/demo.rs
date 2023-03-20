@@ -42,7 +42,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     assert!(s.is_active);
     assert_eq!(s.num_attempts, 0);
     assert_eq!(s.grade, 81.0);
-    assert_eq!(s.notes, None);
+    assert_eq!(s.notes, Some("".into()));
     assert_eq!(s.confidence, None);
 
     let string = r#"

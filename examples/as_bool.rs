@@ -10,7 +10,7 @@ use serde_this_or_that::as_bool;
 #[derive(Clone, Debug, Deserialize)]
 pub struct Msg {
     #[serde(deserialize_with = "as_bool")]
-    pub timestamp: bool,
+    pub archived: bool,
 }
 
 // A simple type alias so as to DRY.
@@ -22,99 +22,99 @@ fn main() -> Result<()> {
     trace!("With Empty String:");
     let data = r#"
     {
-        "timestamp": ""
+        "archived": ""
     }"#;
 
     let m: Msg = serde_json::from_str(data).unwrap();
-    assert!(!m.timestamp);
+    assert!(!m.archived);
     trace!("  {m:?}");
 
     trace!("With Null:  ");
     let data = r#"
     {
-        "timestamp": null
+        "archived": null
     }"#;
 
     let m: Msg = serde_json::from_str(data).unwrap();
-    assert!(!m.timestamp);
+    assert!(!m.archived);
     trace!("  {m:?}");
 
     trace!("With Zero (0):");
     let data = r#"
     {
-        "timestamp": 0
+        "archived": 0
     }"#;
 
     let m: Msg = serde_json::from_str(data).unwrap();
 
     trace!("  {m:?}");
-    assert!(!m.timestamp);
+    assert!(!m.archived);
 
     trace!("With One (1):");
 
     let data = r#"
     {
-        "timestamp": 1
+        "archived": 1
     }"#;
 
     let m: Msg = serde_json::from_str(data).unwrap();
 
     trace!("  {m:?}");
-    assert!(m.timestamp);
+    assert!(m.archived);
 
     trace!("With String (truthy #1):");
 
     let data = r#"
     {
-        "timestamp": "tRuE"
+        "archived": "tRuE"
     }"#;
 
     let m: Msg = serde_json::from_str(data).unwrap();
 
     trace!("  {m:?}");
-    assert!(m.timestamp);
+    assert!(m.archived);
 
     trace!("With String (truthy #2):");
 
     let data = r#"
     {
-        "timestamp": "Y"
+        "archived": "Y"
     }"#;
 
     let m: Msg = serde_json::from_str(data).unwrap();
 
     trace!("  {m:?}");
-    assert!(m.timestamp);
+    assert!(m.archived);
 
     trace!("With String (falsy):");
 
     let data = r#"
     {
-        "timestamp": "nope!"
+        "archived": "nope!"
     }"#;
 
     let m: Msg = serde_json::from_str(data).unwrap();
 
     trace!("  {m:?}");
-    assert!(!m.timestamp);
+    assert!(!m.archived);
 
     trace!("With String (Invalid Numeric):");
 
     let data = r#"
     {
-        "timestamp": "123456789076543210"
+        "archived": "123456789076543210"
     }"#;
 
     let m: Msg = serde_json::from_str(data).unwrap();
 
     trace!("  {m:?}");
-    assert!(!m.timestamp);
+    assert!(!m.archived);
 
     trace!("With U64:");
 
     let data = r#"
     {
-        "timestamp": 123456789076543210
+        "archived": 123456789076543210
     }"#;
 
     if let Err(e) = serde_json::from_str::<Msg>(data) {
@@ -128,7 +128,7 @@ fn main() -> Result<()> {
 
     let data = r#"
     {
-        "timestamp": -123
+        "archived": -123
     }"#;
 
     if let Err(e) = serde_json::from_str::<Msg>(data) {

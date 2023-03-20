@@ -123,7 +123,7 @@ where
 
 /// De-serialize either a `str`, `bool`, `i64`, `f64`, or `u64`
 /// as an (owned) *string* value wrapped in [`Some`],
-/// and an empty string or `null` value as [`None`].
+/// and a `null` value as [`None`].
 ///
 /// # Returns
 /// A [`Some`] with the owned `String` value of a string,
@@ -131,7 +131,6 @@ where
 ///
 /// A [`None`] in the case of:
 ///   * a `null` value.
-///   * an empty string.
 ///   * any *de-serialization* errors.
 ///
 pub fn as_opt_string<'de, D>(deserializer: D) -> Result<Option<String>, D::Error>

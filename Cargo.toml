@@ -82,3 +82,23 @@ path = "benches/as_bool.rs"
 name = "serde_with"
 harness = false
 path = "benches/serde_with.rs"
+
+[[example]]
+name = "opt_as_bool"
+path = "examples/optionals/as_bool.rs"
+
+[[example]]
+name = "opt_as_f64"
+path = "examples/optionals/as_f64.rs"
+
+[[example]]
+name = "opt_as_i64"
+path = "examples/optionals/as_i64.rs"
+
+[[example]]
+name = "opt_as_string"
+path = "examples/optionals/as_string.rs"
+
+[[example]]
+name = "opt_as_u64"
+path = "examples/optionals/as_u64.rs"

@@ -98,11 +98,11 @@ where
     deserializer.deserialize_any(DeserializeStringWithVisitor)
 }
 
-/// TODO maybe update these definitions into a macro ..?
+// TODO maybe update these definitions into a macro ..?
 
 struct DeserializeU64WithVisitor;
 
-impl<'de> de::Visitor<'de> for DeserializeU64WithVisitor {
+impl de::Visitor<'_> for DeserializeU64WithVisitor {
     type Value = u64;
 
     fn expecting(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
@@ -162,7 +162,7 @@ impl<'de> de::Visitor<'de> for DeserializeU64WithVisitor {
 
 struct DeserializeI64WithVisitor;
 
-impl<'de> de::Visitor<'de> for DeserializeI64WithVisitor {
+impl de::Visitor<'_> for DeserializeI64WithVisitor {
     type Value = i64;
 
     fn expecting(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
@@ -222,7 +222,7 @@ impl<'de> de::Visitor<'de> for DeserializeI64WithVisitor {
 
 struct DeserializeF64WithVisitor;
 
-impl<'de> de::Visitor<'de> for DeserializeF64WithVisitor {
+impl de::Visitor<'_> for DeserializeF64WithVisitor {
     type Value = f64;
 
     fn expecting(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
@@ -275,7 +275,7 @@ impl<'de> de::Visitor<'de> for DeserializeF64WithVisitor {
 
 struct DeserializeBoolWithVisitor;
 
-impl<'de> de::Visitor<'de> for DeserializeBoolWithVisitor {
+impl de::Visitor<'_> for DeserializeBoolWithVisitor {
     type Value = bool;
 
     fn expecting(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
@@ -361,7 +361,7 @@ impl<'de> de::Visitor<'de> for DeserializeBoolWithVisitor {
 
 struct DeserializeStringWithVisitor;
 
-impl<'de> de::Visitor<'de> for DeserializeStringWithVisitor {
+impl de::Visitor<'_> for DeserializeStringWithVisitor {
     type Value = String;
 
     fn expecting(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {

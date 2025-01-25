@@ -462,6 +462,7 @@ mod tests {
     use super::*;
     use serde::Deserialize;
 
+    // Tests for as_opt_bool
     mod as_opt_bool_tests {
         use super::*;
 
@@ -472,17 +473,23 @@ mod tests {
         }
 
         #[test]
-        fn test_as_opt_bool_with_bool() {
-            let json = r#"{"field": true}"#;
-            let deserialized: TestOptBoolStruct = serde_json::from_str(json).unwrap();
-            assert_eq!(deserialized, TestOptBoolStruct { field: Some(true) });
+        fn test_as_opt_bool_with_truthy_values() {
+            let truthy_values = ["1", "OK", "ON", "T", "TRUE", "Y", "YES"];
+            for value in truthy_values {
+                let json = format!(r#"{{"field": "{}"}}"#, value);
+                let deserialized: TestOptBoolStruct = serde_json::from_str(&json).unwrap();
+                assert_eq!(deserialized, TestOptBoolStruct { field: Some(true) });
+            }
         }
 
         #[test]
-        fn test_as_opt_bool_with_string() {
-            let json = r#"{"field": "true"}"#;
-            let deserialized: TestOptBoolStruct = serde_json::from_str(json).unwrap();
-            assert_eq!(deserialized, TestOptBoolStruct { field: Some(true) });
+        fn test_as_opt_bool_with_falsy_values() {
+            let falsy_values = ["0", "OFF", "F", "FALSE", "N", "NO"];
+            for value in falsy_values {
+                let json = format!(r#"{{"field": "{}"}}"#, value);
+                let deserialized: TestOptBoolStruct = serde_json::from_str(&json).unwrap();
+                assert_eq!(deserialized, TestOptBoolStruct { field: Some(false) });
+            }
         }
 
         #[test]
@@ -491,8 +498,16 @@ mod tests {
             let deserialized: TestOptBoolStruct = serde_json::from_str(json).unwrap();
             assert_eq!(deserialized, TestOptBoolStruct { field: None });
         }
+
+        #[test]
+        fn test_as_opt_bool_with_invalid() {
+            let json = r#"{"field": "INVALID"}"#;
+            let deserialized: TestOptBoolStruct = serde_json::from_str(json).unwrap();
+            assert_eq!(deserialized, TestOptBoolStruct { field: None });
+        }
     }
 
+    // Tests for as_opt_f64
     mod as_opt_f64_tests {
         use super::*;
 
@@ -503,7 +518,26 @@ mod tests {
         }
 
         #[test]
-        fn test_as_opt_f64_with_float() {
+        fn test_as_opt_f64_with_large_number() {
+            let json = r#"{"field": 1e308}"#;
+            let deserialized: TestOptF64Struct = serde_json::from_str(json).unwrap();
+            assert_eq!(deserialized, TestOptF64Struct { field: Some(1e308) });
+        }
+
+        #[test]
+        fn test_as_opt_f64_with_negative_number() {
+            let json = r#"{"field": -123.45}"#;
+            let deserialized: TestOptF64Struct = serde_json::from_str(json).unwrap();
+            assert_eq!(
+                deserialized,
+                TestOptF64Struct {
+                    field: Some(-123.45)
+                }
+            );
+        }
+
+        #[test]
+        fn test_as_opt_f64_with_number() {
             let json = r#"{"field": 123.45}"#;
             let deserialized: TestOptF64Struct = serde_json::from_str(json).unwrap();
             assert_eq!(
@@ -515,13 +549,28 @@ mod tests {
         }
 
         #[test]
+        fn test_as_opt_f64_with_integer() {
+            let json = r#"{"field": 123}"#;
+            let deserialized: TestOptF64Struct = serde_json::from_str(json).unwrap();
+            assert_eq!(deserialized, TestOptF64Struct { field: Some(123.0) });
+        }
+
+        #[test]
         fn test_as_opt_f64_with_null() {
             let json = r#"{"field": null}"#;
             let deserialized: TestOptF64Struct = serde_json::from_str(json).unwrap();
             assert_eq!(deserialized, TestOptF64Struct { field: None });
         }
+
+        #[test]
+        fn test_as_opt_f64_with_invalid_string() {
+            let json = r#"{"field": "INVALID"}"#;
+            let deserialized: TestOptF64Struct = serde_json::from_str(json).unwrap();
+            assert_eq!(deserialized, TestOptF64Struct { field: None });
+        }
     }
 
+    // Tests for as_opt_i64
     mod as_opt_i64_tests {
         use super::*;
 
@@ -539,13 +588,35 @@ mod tests {
         }
 
         #[test]
+        fn test_as_opt_i64_with_string() {
+            let json = r#"{"field": "123"}"#;
+            let deserialized: TestOptI64Struct = serde_json::from_str(json).unwrap();
+            assert_eq!(deserialized, TestOptI64Struct { field: Some(123) });
+        }
+
+        #[test]
+        fn test_as_opt_i64_with_float() {
+            let json = r#"{"field": 123.45}"#;
+            let deserialized: TestOptI64Struct = serde_json::from_str(json).unwrap();
+            assert_eq!(deserialized, TestOptI64Struct { field: Some(123) });
+        }
+
+        #[test]
         fn test_as_opt_i64_with_null() {
             let json = r#"{"field": null}"#;
             let deserialized: TestOptI64Struct = serde_json::from_str(json).unwrap();
             assert_eq!(deserialized, TestOptI64Struct { field: None });
         }
+
+        #[test]
+        fn test_as_opt_i64_with_invalid() {
+            let json = r#"{"field": "INVALID"}"#;
+            let deserialized: TestOptI64Struct = serde_json::from_str(json).unwrap();
+            assert_eq!(deserialized, TestOptI64Struct { field: None });
+        }
     }
 
+    // Tests for as_opt_string
     mod as_opt_string_tests {
         use super::*;
 
@@ -568,6 +639,30 @@ mod tests {
         }
 
         #[test]
+        fn test_as_opt_string_with_number() {
+            let json = r#"{"field": 123}"#;
+            let deserialized: TestOptStringStruct = serde_json::from_str(json).unwrap();
+            assert_eq!(
+                deserialized,
+                TestOptStringStruct {
+                    field: Some("123".to_owned())
+                }
+            );
+        }
+
+        #[test]
+        fn test_as_opt_string_with_boolean() {
+            let json = r#"{"field": true}"#;
+            let deserialized: TestOptStringStruct = serde_json::from_str(json).unwrap();
+            assert_eq!(
+                deserialized,
+                TestOptStringStruct {
+                    field: Some("true".to_owned())
+                }
+            );
+        }
+
+        #[test]
         fn test_as_opt_string_with_null() {
             let json = r#"{"field": null}"#;
             let deserialized: TestOptStringStruct = serde_json::from_str(json).unwrap();
@@ -575,6 +670,7 @@ mod tests {
         }
     }
 
+    // Tests for as_opt_u64
     mod as_opt_u64_tests {
         use super::*;
 
@@ -592,9 +688,30 @@ mod tests {
         }
 
         #[test]
+        fn test_as_opt_u64_with_string() {
+            let json = r#"{"field": "123"}"#;
+            let deserialized: TestOptU64Struct = serde_json::from_str(json).unwrap();
+            assert_eq!(deserialized, TestOptU64Struct { field: Some(123) });
+        }
+
+        #[test]
+        fn test_as_opt_u64_with_float() {
+            let json = r#"{"field": 123.45}"#;
+            let deserialized: TestOptU64Struct = serde_json::from_str(json).unwrap();
+            assert_eq!(deserialized, TestOptU64Struct { field: Some(123) });
+        }
+
+        #[test]
         fn test_as_opt_u64_with_null() {
             let json = r#"{"field": null}"#;
             let deserialized: TestOptU64Struct = serde_json::from_str(json).unwrap();
+            assert_eq!(deserialized, TestOptU64Struct { field: None });
+        }
+
+        #[test]
+        fn test_as_opt_u64_with_negative() {
+            let json = r#"{"field": -1}"#;
+            let deserialized = serde_json::from_str::<TestOptU64Struct>(json).unwrap();
             assert_eq!(deserialized, TestOptU64Struct { field: None });
         }
     }

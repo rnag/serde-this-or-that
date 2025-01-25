@@ -412,3 +412,94 @@ impl<'de> de::Visitor<'de> for DeserializeStringWithVisitor {
         Ok(String::new())
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    mod as_string_tests {
+        use super::*;
+        use serde::Deserialize;
+
+        #[derive(Debug, PartialEq, Deserialize)]
+        struct TestStrStruct {
+            #[serde(deserialize_with = "as_string")]
+            field: String,
+        }
+
+        #[test]
+        fn test_as_str_with_string() {
+            let json = r#"{"field": "Hello"}"#;
+            let deserialized: TestStrStruct = serde_json::from_str(json).unwrap();
+            assert_eq!(deserialized, TestStrStruct { field: "Hello".to_owned() });
+        }
+
+        #[test]
+        fn test_as_str_with_null() {
+            let json = r#"{"field": null}"#;
+            let deserialized: TestStrStruct = serde_json::from_str(json).unwrap();
+            assert_eq!(deserialized, TestStrStruct { field: "".to_owned() });
+        }
+
+        #[test]
+        fn test_as_str_with_number() {
+            let json = r#"{"field": 123}"#;
+            let deserialized: TestStrStruct = serde_json::from_str(json).unwrap();
+            assert_eq!(deserialized, TestStrStruct { field: "123".to_owned() });
+        }
+    }
+
+    mod as_bool_tests {
+        use super::*;
+        use serde::Deserialize;
+
+        #[derive(Debug, PartialEq, Deserialize)]
+        struct TestStruct {
+            #[serde(deserialize_with = "as_bool")]
+            field: bool,
+        }
+
+        #[test]
+        fn test_ok_values() {
+            let json = r#"{"field": "OK"}"#;
+            let deserialized: TestStruct = serde_json::from_str(json).unwrap();
+            assert_eq!(deserialized, TestStruct { field: true });
+
+            let json = r#"{"field": true}"#;
+            let deserialized: TestStruct = serde_json::from_str(json).unwrap();
+            assert_eq!(deserialized, TestStruct { field: true });
+
+            let json = r#"{"field": "Y"}"#;
+            let deserialized: TestStruct = serde_json::from_str(json).unwrap();
+            assert_eq!(deserialized, TestStruct { field: true });
+        }
+
+        #[test]
+        fn test_ng_values() {
+            let json = r#"{"field": "NG"}"#;
+            let deserialized: TestStruct = serde_json::from_str(json).unwrap();
+            assert_eq!(deserialized, TestStruct { field: false });
+
+            let json = r#"{"field": false}"#;
+            let deserialized: TestStruct = serde_json::from_str(json).unwrap();
+            assert_eq!(deserialized, TestStruct { field: false });
+
+            let json = r#"{"field": "NO"}"#;
+            let deserialized: TestStruct = serde_json::from_str(json).unwrap();
+            assert_eq!(deserialized, TestStruct { field: false });
+        }
+
+        #[test]
+        fn test_null_value() {
+            let json = r#"{"field": null}"#;
+            let deserialized: TestStruct = serde_json::from_str(json).unwrap();
+            assert_eq!(deserialized, TestStruct { field: false });
+        }
+
+        #[test]
+        fn test_invalid_values() {
+            let json = r#"{"field": "INVALID"}"#;
+            let deserialized: TestStruct = serde_json::from_str(json).unwrap();
+            assert_eq!(deserialized, TestStruct { field: false });
+        }
+    }
+}

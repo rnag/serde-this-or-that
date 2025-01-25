@@ -430,21 +430,36 @@ mod tests {
         fn test_as_str_with_string() {
             let json = r#"{"field": "Hello"}"#;
             let deserialized: TestStrStruct = serde_json::from_str(json).unwrap();
-            assert_eq!(deserialized, TestStrStruct { field: "Hello".to_owned() });
+            assert_eq!(
+                deserialized,
+                TestStrStruct {
+                    field: "Hello".to_owned()
+                }
+            );
         }
 
         #[test]
         fn test_as_str_with_null() {
             let json = r#"{"field": null}"#;
             let deserialized: TestStrStruct = serde_json::from_str(json).unwrap();
-            assert_eq!(deserialized, TestStrStruct { field: "".to_owned() });
+            assert_eq!(
+                deserialized,
+                TestStrStruct {
+                    field: "".to_owned()
+                }
+            );
         }
 
         #[test]
         fn test_as_str_with_number() {
             let json = r#"{"field": 123}"#;
             let deserialized: TestStrStruct = serde_json::from_str(json).unwrap();
-            assert_eq!(deserialized, TestStrStruct { field: "123".to_owned() });
+            assert_eq!(
+                deserialized,
+                TestStrStruct {
+                    field: "123".to_owned()
+                }
+            );
         }
     }
 
@@ -500,6 +515,123 @@ mod tests {
             let json = r#"{"field": "INVALID"}"#;
             let deserialized: TestStruct = serde_json::from_str(json).unwrap();
             assert_eq!(deserialized, TestStruct { field: false });
+        }
+    }
+
+    mod as_f64_tests {
+        use super::*;
+        use serde::Deserialize;
+
+        #[derive(Debug, PartialEq, Deserialize)]
+        struct TestStruct {
+            #[serde(deserialize_with = "as_f64")]
+            field: f64,
+        }
+
+        #[test]
+        fn test_as_f64_with_number() {
+            let json = r#"{"field": 123.45}"#;
+            let deserialized: TestStruct = serde_json::from_str(json).unwrap();
+            assert_eq!(deserialized, TestStruct { field: 123.45 });
+        }
+
+        #[test]
+        fn test_as_f64_with_integer() {
+            let json = r#"{"field": 123}"#;
+            let deserialized: TestStruct = serde_json::from_str(json).unwrap();
+            assert_eq!(deserialized, TestStruct { field: 123.0 });
+        }
+
+        #[test]
+        fn test_as_f64_with_string() {
+            let json = r#"{"field": "123.45"}"#;
+            let deserialized: TestStruct = serde_json::from_str(json).unwrap();
+            assert_eq!(deserialized, TestStruct { field: 123.45 });
+        }
+
+        #[test]
+        fn test_as_f64_with_null() {
+            let json = r#"{"field": null}"#;
+            let deserialized: TestStruct = serde_json::from_str(json).unwrap();
+            assert_eq!(deserialized, TestStruct { field: 0.0 });
+        }
+    }
+
+    mod as_i64_tests {
+        use super::*;
+        use serde::Deserialize;
+
+        #[derive(Debug, PartialEq, Deserialize)]
+        struct TestStruct {
+            #[serde(deserialize_with = "as_i64")]
+            field: i64,
+        }
+
+        #[test]
+        fn test_as_i64_with_integer() {
+            let json = r#"{"field": 123}"#;
+            let deserialized: TestStruct = serde_json::from_str(json).unwrap();
+            assert_eq!(deserialized, TestStruct { field: 123 });
+        }
+
+        #[test]
+        fn test_as_i64_with_string() {
+            let json = r#"{"field": "123"}"#;
+            let deserialized: TestStruct = serde_json::from_str(json).unwrap();
+            assert_eq!(deserialized, TestStruct { field: 123 });
+        }
+
+        #[test]
+        fn test_as_i64_with_float() {
+            let json = r#"{"field": 123.45}"#;
+            let deserialized: TestStruct = serde_json::from_str(json).unwrap();
+            assert_eq!(deserialized, TestStruct { field: 123 });
+        }
+
+        #[test]
+        fn test_as_i64_with_null() {
+            let json = r#"{"field": null}"#;
+            let deserialized: TestStruct = serde_json::from_str(json).unwrap();
+            assert_eq!(deserialized, TestStruct { field: 0 });
+        }
+    }
+
+    mod as_u64_tests {
+        use super::*;
+        use serde::Deserialize;
+
+        #[derive(Debug, PartialEq, Deserialize)]
+        struct TestStruct {
+            #[serde(deserialize_with = "as_u64")]
+            field: u64,
+        }
+
+        #[test]
+        fn test_as_u64_with_integer() {
+            let json = r#"{"field": 123}"#;
+            let deserialized: TestStruct = serde_json::from_str(json).unwrap();
+            assert_eq!(deserialized, TestStruct { field: 123 });
+        }
+
+        #[test]
+        fn test_as_u64_with_string() {
+            let json = r#"{"field": "123"}"#;
+            let deserialized: TestStruct = serde_json::from_str(json).unwrap();
+            assert_eq!(deserialized, TestStruct { field: 123 });
+        }
+
+        #[test]
+        fn test_as_u64_with_float() {
+            let json = r#"{"field": 123.45}"#;
+            let deserialized: TestStruct = serde_json::from_str(json).unwrap();
+            assert_eq!(deserialized, TestStruct { field: 123 });
+        }
+
+        #[test]
+        fn test_as_u64_with_null() {
+            let json = r#"{"field": null}"#;
+            let deserialized: TestStruct = serde_json::from_str(json).unwrap();
+            assert_eq!(deserialized, TestStruct { field: 0 });
         }
     }
 }

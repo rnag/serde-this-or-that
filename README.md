@@ -13,7 +13,7 @@ This crate works with Cargo with a `Cargo.toml` like:
 
 ```toml
 [dependencies]
-serde-this-or-that = "0.4"
+serde-this-or-that = "0.5"
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 ```
@@ -67,15 +67,21 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
 ## Exported Functions
 
-- [`as_bool`](https://docs.rs/serde-this-or-that/latest/serde_this_or_that/fn.as_bool.html) / [`as_opt_bool`](https://docs.rs/serde-this-or-that/latest/serde_this_or_that/fn.as_opt_bool.html)
-- [`as_f64`](https://docs.rs/serde-this-or-that/latest/serde_this_or_that/fn.as_f64.html) / [`as_opt_f64`](https://docs.rs/serde-this-or-that/latest/serde_this_or_that/fn.as_opt_f64.html)
-- [`as_i64`](https://docs.rs/serde-this-or-that/latest/serde_this_or_that/fn.as_i64.html) / [`as_opt_i64`](https://docs.rs/serde-this-or-that/latest/serde_this_or_that/fn.as_opt_i64.html)
-- [`as_string`](https://docs.rs/serde-this-or-that/latest/serde_this_or_that/fn.as_string.html) / [`as_opt_string`](https://docs.rs/serde-this-or-that/latest/serde_this_or_that/fn.as_opt_string.html)
-- [`as_u64`](https://docs.rs/serde-this-or-that/latest/serde_this_or_that/fn.as_u64.html) / [`as_opt_u64`](https://docs.rs/serde-this-or-that/latest/serde_this_or_that/fn.as_opt_u64.html) 
+- [`as_bool`](https://docs.rs/serde-this-or-that/latest/serde_this_or_that/fn.as_bool.html) / [
+  `as_opt_bool`](https://docs.rs/serde-this-or-that/latest/serde_this_or_that/fn.as_opt_bool.html)
+- [`as_f64`](https://docs.rs/serde-this-or-that/latest/serde_this_or_that/fn.as_f64.html) / [
+  `as_opt_f64`](https://docs.rs/serde-this-or-that/latest/serde_this_or_that/fn.as_opt_f64.html)
+- [`as_i64`](https://docs.rs/serde-this-or-that/latest/serde_this_or_that/fn.as_i64.html) / [
+  `as_opt_i64`](https://docs.rs/serde-this-or-that/latest/serde_this_or_that/fn.as_opt_i64.html)
+- [`as_string`](https://docs.rs/serde-this-or-that/latest/serde_this_or_that/fn.as_string.html) / [
+  `as_opt_string`](https://docs.rs/serde-this-or-that/latest/serde_this_or_that/fn.as_opt_string.html)
+- [`as_u64`](https://docs.rs/serde-this-or-that/latest/serde_this_or_that/fn.as_u64.html) / [
+  `as_opt_u64`](https://docs.rs/serde-this-or-that/latest/serde_this_or_that/fn.as_opt_u64.html)
 
 ## Examples
 
-You can check out sample usage of this crate in the [examples/](https://github.com/rnag/serde-this-or-that/tree/main/examples)
+You can check out sample usage of this crate in
+the [examples/](https://github.com/rnag/serde-this-or-that/tree/main/examples)
 folder in the project repo on GitHub.
 
 ## Performance
@@ -94,9 +100,13 @@ The benchmarks live in the [benches/](https://github.com/rnag/serde-this-or-that
 folder, and can be run with `cargo bench`.
 
 [`Visitor`]: https://docs.serde.rs/serde/de/trait.Visitor.html
+
 [untagged enum]: https://stackoverflow.com/a/66961340/10237506
+
 [serde_with]: https://docs.rs/serde_with
+
 [`DisplayFromStr`]: https://docs.rs/serde_with/latest/serde_with/struct.DisplayFromStr.html
+
 [`PickFirst`]: https://docs.rs/serde_with/latest/serde_with/struct.PickFirst.html
 
 ## Optionals
@@ -104,7 +114,8 @@ folder, and can be run with `cargo bench`.
 The extra helper functions that begin with `as_opt`, return an `Option<T>` of the respective data type `T`,
 rather than the type `T` itself (see [#4](https://github.com/rnag/serde-this-or-that/issues/4)).
 
-On success, they return a value of `T` wrapped in [`Some`](https://doc.rust-lang.org/std/option/enum.Option.html#variant.Some).
+On success, they return a value of `T` wrapped in [
+`Some`](https://doc.rust-lang.org/std/option/enum.Option.html#variant.Some).
 
 On error, or when there is a `null` value, or one of an *invalid* data type, the
 `as_opt` helper functions return [`None`](https://doc.rust-lang.org/std/option/enum.Option.html#variant.None) instead.
@@ -117,6 +128,7 @@ to discuss a new feature or change.
 Check out the [Contributing][] section in the docs for more info.
 
 [Contributing]: CONTRIBUTING.md
+
 [open an issue]: https://github.com/rnag/serde-this-or-that/issues
 
 ## License

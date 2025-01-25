@@ -1,23 +1,23 @@
 [package]
 name = "serde-this-or-that"
-version = "0.4.2"
-authors = ["Ritvik Nag <rv.kvetch@gmail.com>"]
+version = "0.5.0"
+authors = ["Ritvik Nag <me@ritviknag.com>"]
 description = "Custom deserialization for fields that can be specified as multiple types."
 documentation = "https://docs.rs/serde-this-or-that"
 repository = "https://github.com/rnag/serde-this-or-that"
 readme = "README.md"
 keywords = ["serde",
-            # I would have liked to add the below keyword, but of course
-            # crates.io has a limit of 5 keywords, so well.. that's that. :\
-            # "utilities",
-            # And now surprisingly, I found this keyword to be super useful!
-            # I'm actually partially shocked that crates.io doesn't use the
-            # crate name to automagically satisfy user search requests.
-            "this-or-that",
-            # Of course, the rest that follow are also pretty solid too.
-            "deserialization",
-            "visitor",
-            "multiple-type"]
+    # I would have liked to add the below keyword, but of course
+    # crates.io has a limit of 5 keywords, so well.. that's that. :\
+    # "utilities",
+    # And now surprisingly, I found this keyword to be super useful!
+    # I'm actually partially shocked that crates.io doesn't use the
+    # crate name to automagically satisfy user search requests.
+    "this-or-that",
+    # Of course, the rest that follow are also pretty solid too.
+    "deserialization",
+    "visitor",
+    "multiple-type"]
 categories = ["encoding"]
 license = "MIT"
 edition = "2021"

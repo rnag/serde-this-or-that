@@ -76,7 +76,7 @@ where
 /// a *zero* or a *one*.
 ///
 /// # Returns
-/// The boolean (`bool`) value of a string or number.
+/// The boolean (`bool`) value of a string, boolean, or number.
 ///
 pub fn as_bool<'de, D>(deserializer: D) -> Result<bool, D::Error>
 where
@@ -98,11 +98,11 @@ where
     deserializer.deserialize_any(DeserializeStringWithVisitor)
 }
 
-/// TODO maybe update these definitions into a macro ..?
+// TODO maybe update these definitions into a macro ..?
 
 struct DeserializeU64WithVisitor;
 
-impl<'de> de::Visitor<'de> for DeserializeU64WithVisitor {
+impl de::Visitor<'_> for DeserializeU64WithVisitor {
     type Value = u64;
 
     fn expecting(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
@@ -162,7 +162,7 @@ impl<'de> de::Visitor<'de> for DeserializeU64WithVisitor {
 
 struct DeserializeI64WithVisitor;
 
-impl<'de> de::Visitor<'de> for DeserializeI64WithVisitor {
+impl de::Visitor<'_> for DeserializeI64WithVisitor {
     type Value = i64;
 
     fn expecting(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
@@ -222,7 +222,7 @@ impl<'de> de::Visitor<'de> for DeserializeI64WithVisitor {
 
 struct DeserializeF64WithVisitor;
 
-impl<'de> de::Visitor<'de> for DeserializeF64WithVisitor {
+impl de::Visitor<'_> for DeserializeF64WithVisitor {
     type Value = f64;
 
     fn expecting(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
@@ -275,7 +275,7 @@ impl<'de> de::Visitor<'de> for DeserializeF64WithVisitor {
 
 struct DeserializeBoolWithVisitor;
 
-impl<'de> de::Visitor<'de> for DeserializeBoolWithVisitor {
+impl de::Visitor<'_> for DeserializeBoolWithVisitor {
     type Value = bool;
 
     fn expecting(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
@@ -361,7 +361,7 @@ impl<'de> de::Visitor<'de> for DeserializeBoolWithVisitor {
 
 struct DeserializeStringWithVisitor;
 
-impl<'de> de::Visitor<'de> for DeserializeStringWithVisitor {
+impl de::Visitor<'_> for DeserializeStringWithVisitor {
     type Value = String;
 
     fn expecting(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
@@ -410,5 +410,288 @@ impl<'de> de::Visitor<'de> for DeserializeStringWithVisitor {
         E: de::Error,
     {
         Ok(String::new())
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use serde::Deserialize;
+
+    mod as_string_tests {
+        use super::*;
+
+        #[derive(Debug, PartialEq, Deserialize)]
+        struct TestStrStruct {
+            #[serde(deserialize_with = "as_string")]
+            field: String,
+        }
+
+        #[test]
+        fn test_as_string_with_string() {
+            let json = r#"{"field": "Hello"}"#;
+            let deserialized: TestStrStruct = serde_json::from_str(json).unwrap();
+            assert_eq!(
+                deserialized,
+                TestStrStruct {
+                    field: "Hello".to_owned()
+                }
+            );
+        }
+
+        #[test]
+        fn test_as_string_with_null() {
+            let json = r#"{"field": null}"#;
+            let deserialized: TestStrStruct = serde_json::from_str(json).unwrap();
+            assert_eq!(
+                deserialized,
+                TestStrStruct {
+                    field: "".to_owned()
+                }
+            );
+        }
+
+        #[test]
+        fn test_as_string_with_number() {
+            let json = r#"{"field": 123}"#;
+            let deserialized: TestStrStruct = serde_json::from_str(json).unwrap();
+            assert_eq!(
+                deserialized,
+                TestStrStruct {
+                    field: "123".to_owned()
+                }
+            );
+        }
+
+        #[test]
+        fn test_as_string_with_boolean() {
+            let json = r#"{"field": true}"#;
+            let deserialized: TestStrStruct = serde_json::from_str(json).unwrap();
+            assert_eq!(
+                deserialized,
+                TestStrStruct {
+                    field: "true".to_owned()
+                }
+            );
+        }
+
+        #[test]
+        fn test_as_string_with_empty_string() {
+            let json = r#"{"field": ""}"#;
+            let deserialized: TestStrStruct = serde_json::from_str(json).unwrap();
+            assert_eq!(
+                deserialized,
+                TestStrStruct {
+                    field: "".to_owned()
+                }
+            );
+        }
+    }
+
+    mod as_bool_tests {
+        use super::*;
+
+        #[derive(Debug, PartialEq, Deserialize)]
+        struct TestBoolStruct {
+            #[serde(deserialize_with = "as_bool")]
+            field: bool,
+        }
+
+        #[test]
+        fn test_truthy_values() {
+            let truthy_values = ["1", "OK", "ON", "T", "TRUE", "Y", "YES"];
+            for value in truthy_values {
+                let json = format!(r#"{{"field": "{}"}}"#, value);
+                let deserialized: TestBoolStruct = serde_json::from_str(&json).unwrap();
+                assert_eq!(deserialized, TestBoolStruct { field: true });
+            }
+        }
+
+        #[test]
+        fn test_falsy_values() {
+            let falsy_values = ["0", "OFF", "F", "FALSE", "N", "NO"];
+            for value in falsy_values {
+                let json = format!(r#"{{"field": "{}"}}"#, value);
+                let deserialized: TestBoolStruct = serde_json::from_str(&json).unwrap();
+                assert_eq!(deserialized, TestBoolStruct { field: false });
+            }
+        }
+
+        #[test]
+        fn test_as_bool_with_null() {
+            let json = r#"{"field": null}"#;
+            let deserialized: TestBoolStruct = serde_json::from_str(json).unwrap();
+            assert_eq!(deserialized, TestBoolStruct { field: false });
+        }
+
+        #[test]
+        fn test_invalid_boolean() {
+            let json = r#"{"field": "INVALID"}"#;
+            let deserialized: TestBoolStruct = serde_json::from_str(json).unwrap();
+            assert_eq!(deserialized, TestBoolStruct { field: false });
+        }
+    }
+
+    mod as_f64_tests {
+        use super::*;
+
+        #[derive(Debug, PartialEq, Deserialize)]
+        struct TestF64Struct {
+            #[serde(deserialize_with = "as_f64")]
+            field: f64,
+        }
+
+        #[test]
+        fn test_as_f64_with_large_number() {
+            let json = r#"{"field": 1e308}"#;
+            let deserialized: TestF64Struct = serde_json::from_str(json).unwrap();
+            assert_eq!(deserialized, TestF64Struct { field: 1e308 });
+        }
+
+        #[test]
+        fn test_as_f64_with_negative_number() {
+            let json = r#"{"field": -123.45}"#;
+            let deserialized: TestF64Struct = serde_json::from_str(json).unwrap();
+            assert_eq!(deserialized, TestF64Struct { field: -123.45 });
+        }
+
+        #[test]
+        fn test_as_f64_with_number() {
+            let json = r#"{"field": 123.45}"#;
+            let deserialized: TestF64Struct = serde_json::from_str(json).unwrap();
+            assert_eq!(deserialized, TestF64Struct { field: 123.45 });
+        }
+
+        #[test]
+        fn test_as_f64_with_integer() {
+            let json = r#"{"field": 123}"#;
+            let deserialized: TestF64Struct = serde_json::from_str(json).unwrap();
+            assert_eq!(deserialized, TestF64Struct { field: 123.0 });
+        }
+
+        #[test]
+        fn test_as_f64_with_string() {
+            let json = r#"{"field": "123.45"}"#;
+            let deserialized: TestF64Struct = serde_json::from_str(json).unwrap();
+            assert_eq!(deserialized, TestF64Struct { field: 123.45 });
+        }
+
+        #[test]
+        fn test_as_f64_with_empty_string() {
+            let json = r#"{"field": ""}"#;
+            let deserialized = serde_json::from_str::<TestF64Struct>(json).unwrap();
+            assert_eq!(deserialized, TestF64Struct { field: 0.0 });
+        }
+
+        #[test]
+        fn test_as_f64_with_null() {
+            let json = r#"{"field": null}"#;
+            let deserialized: TestF64Struct = serde_json::from_str(json).unwrap();
+            assert_eq!(deserialized, TestF64Struct { field: 0.0 });
+        }
+    }
+
+    mod as_i64_tests {
+        use super::*;
+
+        #[derive(Debug, PartialEq, Deserialize)]
+        struct TestI64Struct {
+            #[serde(deserialize_with = "as_i64")]
+            field: i64,
+        }
+
+        #[test]
+        fn test_as_i64_with_integer() {
+            let json = r#"{"field": 123}"#;
+            let deserialized: TestI64Struct = serde_json::from_str(json).unwrap();
+            assert_eq!(deserialized, TestI64Struct { field: 123 });
+        }
+
+        #[test]
+        fn test_as_i64_with_string() {
+            let json = r#"{"field": "123"}"#;
+            let deserialized: TestI64Struct = serde_json::from_str(json).unwrap();
+            assert_eq!(deserialized, TestI64Struct { field: 123 });
+        }
+
+        #[test]
+        fn test_as_i64_with_float() {
+            let json = r#"{"field": 123.45}"#;
+            let deserialized: TestI64Struct = serde_json::from_str(json).unwrap();
+            assert_eq!(deserialized, TestI64Struct { field: 123 });
+        }
+
+        #[test]
+        fn test_as_i64_with_null() {
+            let json = r#"{"field": null}"#;
+            let deserialized: TestI64Struct = serde_json::from_str(json).unwrap();
+            assert_eq!(deserialized, TestI64Struct { field: 0 });
+        }
+
+        #[test]
+        fn test_as_i64_with_max_value() {
+            let json = format!(r#"{{"field": {}}}"#, i64::MAX);
+            let deserialized: TestI64Struct = serde_json::from_str(&json).unwrap();
+            assert_eq!(deserialized, TestI64Struct { field: i64::MAX });
+        }
+
+        #[test]
+        fn test_as_i64_with_overflow() {
+            let json = format!(r#"{{"field": {}}}"#, u64::MAX);
+            let deserialized = serde_json::from_str::<TestI64Struct>(&json);
+            assert!(deserialized.is_err());
+        }
+    }
+
+    mod as_u64_tests {
+        use super::*;
+
+        #[derive(Debug, PartialEq, Deserialize)]
+        struct TestU64Struct {
+            #[serde(deserialize_with = "as_u64")]
+            field: u64,
+        }
+
+        #[test]
+        fn test_as_u64_with_integer() {
+            let json = r#"{"field": 123}"#;
+            let deserialized: TestU64Struct = serde_json::from_str(json).unwrap();
+            assert_eq!(deserialized, TestU64Struct { field: 123 });
+        }
+
+        #[test]
+        fn test_as_u64_with_string() {
+            let json = r#"{"field": "123"}"#;
+            let deserialized: TestU64Struct = serde_json::from_str(json).unwrap();
+            assert_eq!(deserialized, TestU64Struct { field: 123 });
+        }
+
+        #[test]
+        fn test_as_u64_with_float() {
+            let json = r#"{"field": 123.45}"#;
+            let deserialized: TestU64Struct = serde_json::from_str(json).unwrap();
+            assert_eq!(deserialized, TestU64Struct { field: 123 });
+        }
+
+        #[test]
+        fn test_as_u64_with_null() {
+            let json = r#"{"field": null}"#;
+            let deserialized: TestU64Struct = serde_json::from_str(json).unwrap();
+            assert_eq!(deserialized, TestU64Struct { field: 0 });
+        }
+
+        #[test]
+        fn test_as_u64_with_negative_number() {
+            let json = r#"{"field": -1}"#;
+            let deserialized = serde_json::from_str::<TestU64Struct>(json);
+            assert!(deserialized.is_err());
+        }
+
+        #[test]
+        fn test_as_u64_with_large_value() {
+            let json = format!(r#"{{"field": {}}}"#, u64::MAX);
+            let deserialized: TestU64Struct = serde_json::from_str(&json).unwrap();
+            assert_eq!(deserialized, TestU64Struct { field: u64::MAX });
+        }
     }
 }

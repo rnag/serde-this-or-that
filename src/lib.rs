@@ -1,4 +1,4 @@
-#![doc(html_root_url = "https://docs.rs/serde-this-or-that/0.4.2")]
+#![doc(html_root_url = "https://docs.rs/serde-this-or-that/0.5.0")]
 #![warn(rust_2018_idioms, missing_docs)]
 #![deny(warnings, dead_code, unused_imports, unused_mut)]
 
@@ -19,7 +19,7 @@
 //! ```rust
 //! use serde::Deserialize;
 //! use serde_json::from_str;
-//! use serde_this_or_that::{as_bool, as_f64, as_u64};
+//! use serde_this_or_that::{as_bool, as_f64, as_opt_i64, as_u64};
 //!
 //! #[derive(Deserialize, Debug)]
 //! #[serde(rename_all = "camelCase")]
@@ -30,6 +30,9 @@
 //!     num_attempts: u64,
 //!     #[serde(deserialize_with = "as_f64")]
 //!     grade: f64,
+//!     // uses #[serde(default)] in case the field is missing in JSON
+//!     #[serde(default, deserialize_with = "as_opt_i64")]
+//!     confidence: Option<i64>,
 //! }
 //!
 //! fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -37,7 +40,8 @@
 //!     {
 //!         "isActive": "True",
 //!         "numAttempts": "",
-//!         "grade": "81"
+//!         "grade": "81",
+//!         "confidence": "A+"
 //!     }
 //!     "#;
 //!
@@ -47,6 +51,7 @@
 //!     assert!(s.is_active);
 //!     assert_eq!(s.num_attempts, 0);
 //!     assert_eq!(s.grade, 81.0);
+//!     assert_eq!(s.confidence, None);
 //!
 //!     Ok(())
 //! }
@@ -78,6 +83,16 @@
 //! [`DisplayFromStr`]: https://docs.rs/serde_with/latest/serde_with/struct.DisplayFromStr.html
 //! [`PickFirst`]: https://docs.rs/serde_with/latest/serde_with/struct.PickFirst.html
 //!
+//! ## Optionals
+//!
+//! The extra helper functions that begin with `as_opt`, return an `Option<T>` of the respective data type `T`,
+//! rather than the type `T` itself (see [#4](https://github.com/rnag/serde-this-or-that/issues/4)).
+//!
+//! On success, they return a value of `T` wrapped in [`Some`].
+//!
+//! On error, or when there is a `null` value, or one of an *invalid* data type, the
+//! `as_opt` helper functions return [`None`] instead.
+//!
 //!
 //! ## Readme Docs
 //!
@@ -89,8 +104,10 @@
 //!
 
 mod de_impl;
+mod de_impl_opt;
 
 pub use de_impl::{as_bool, as_f64, as_i64, as_string, as_u64};
+pub use de_impl_opt::{as_opt_bool, as_opt_f64, as_opt_i64, as_opt_string, as_opt_u64};
 #[doc(hidden)]
 pub use serde;
 #[doc(hidden)]

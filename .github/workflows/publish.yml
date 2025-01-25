@@ -2,21 +2,11 @@ name: Publish Crate
 
 on:
   push:
-    branches:
-      - main
-    paths:
-      - Cargo.toml
+    tags:
+      - 'v*'  # Trigger on tags starting with 'v'
   repository_dispatch:
     types: publish
 
-# After you create the GitHub repo, head over to `crates.io` and create
-# an API Token, or use the link below:
-#   <https://crates.io/settings/tokens>
-#
-# Once you have an API token, add it as a Repository Secret (CARGO_TOKEN)
-# under the GitHub repo, so that it can be used by GitHub Actions to deploy
-# to `crates.io` whenever a new tag is pushed to GitHub:
-#   <https://github.com/rnag/serde-this-or-that/settings/secrets/actions/new>
 jobs:
   publish:
     runs-on: ubuntu-latest

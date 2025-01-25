@@ -456,3 +456,146 @@ impl<'de> de::Visitor<'de> for DeserializeOptionalStringWithVisitor {
         Ok(None)
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use serde::Deserialize;
+
+    mod as_opt_bool_tests {
+        use super::*;
+
+        #[derive(Debug, PartialEq, Deserialize)]
+        struct TestOptBoolStruct {
+            #[serde(deserialize_with = "as_opt_bool")]
+            field: Option<bool>,
+        }
+
+        #[test]
+        fn test_as_opt_bool_with_bool() {
+            let json = r#"{"field": true}"#;
+            let deserialized: TestOptBoolStruct = serde_json::from_str(json).unwrap();
+            assert_eq!(deserialized, TestOptBoolStruct { field: Some(true) });
+        }
+
+        #[test]
+        fn test_as_opt_bool_with_string() {
+            let json = r#"{"field": "true"}"#;
+            let deserialized: TestOptBoolStruct = serde_json::from_str(json).unwrap();
+            assert_eq!(deserialized, TestOptBoolStruct { field: Some(true) });
+        }
+
+        #[test]
+        fn test_as_opt_bool_with_null() {
+            let json = r#"{"field": null}"#;
+            let deserialized: TestOptBoolStruct = serde_json::from_str(json).unwrap();
+            assert_eq!(deserialized, TestOptBoolStruct { field: None });
+        }
+    }
+
+    mod as_opt_f64_tests {
+        use super::*;
+
+        #[derive(Debug, PartialEq, Deserialize)]
+        struct TestOptF64Struct {
+            #[serde(deserialize_with = "as_opt_f64")]
+            field: Option<f64>,
+        }
+
+        #[test]
+        fn test_as_opt_f64_with_float() {
+            let json = r#"{"field": 123.45}"#;
+            let deserialized: TestOptF64Struct = serde_json::from_str(json).unwrap();
+            assert_eq!(
+                deserialized,
+                TestOptF64Struct {
+                    field: Some(123.45)
+                }
+            );
+        }
+
+        #[test]
+        fn test_as_opt_f64_with_null() {
+            let json = r#"{"field": null}"#;
+            let deserialized: TestOptF64Struct = serde_json::from_str(json).unwrap();
+            assert_eq!(deserialized, TestOptF64Struct { field: None });
+        }
+    }
+
+    mod as_opt_i64_tests {
+        use super::*;
+
+        #[derive(Debug, PartialEq, Deserialize)]
+        struct TestOptI64Struct {
+            #[serde(deserialize_with = "as_opt_i64")]
+            field: Option<i64>,
+        }
+
+        #[test]
+        fn test_as_opt_i64_with_integer() {
+            let json = r#"{"field": 123}"#;
+            let deserialized: TestOptI64Struct = serde_json::from_str(json).unwrap();
+            assert_eq!(deserialized, TestOptI64Struct { field: Some(123) });
+        }
+
+        #[test]
+        fn test_as_opt_i64_with_null() {
+            let json = r#"{"field": null}"#;
+            let deserialized: TestOptI64Struct = serde_json::from_str(json).unwrap();
+            assert_eq!(deserialized, TestOptI64Struct { field: None });
+        }
+    }
+
+    mod as_opt_string_tests {
+        use super::*;
+
+        #[derive(Debug, PartialEq, Deserialize)]
+        struct TestOptStringStruct {
+            #[serde(deserialize_with = "as_opt_string")]
+            field: Option<String>,
+        }
+
+        #[test]
+        fn test_as_opt_string_with_string() {
+            let json = r#"{"field": "Hello"}"#;
+            let deserialized: TestOptStringStruct = serde_json::from_str(json).unwrap();
+            assert_eq!(
+                deserialized,
+                TestOptStringStruct {
+                    field: Some("Hello".to_owned())
+                }
+            );
+        }
+
+        #[test]
+        fn test_as_opt_string_with_null() {
+            let json = r#"{"field": null}"#;
+            let deserialized: TestOptStringStruct = serde_json::from_str(json).unwrap();
+            assert_eq!(deserialized, TestOptStringStruct { field: None });
+        }
+    }
+
+    mod as_opt_u64_tests {
+        use super::*;
+
+        #[derive(Debug, PartialEq, Deserialize)]
+        struct TestOptU64Struct {
+            #[serde(deserialize_with = "as_opt_u64")]
+            field: Option<u64>,
+        }
+
+        #[test]
+        fn test_as_opt_u64_with_integer() {
+            let json = r#"{"field": 123}"#;
+            let deserialized: TestOptU64Struct = serde_json::from_str(json).unwrap();
+            assert_eq!(deserialized, TestOptU64Struct { field: Some(123) });
+        }
+
+        #[test]
+        fn test_as_opt_u64_with_null() {
+            let json = r#"{"field": null}"#;
+            let deserialized: TestOptU64Struct = serde_json::from_str(json).unwrap();
+            assert_eq!(deserialized, TestOptU64Struct { field: None });
+        }
+    }
+}
